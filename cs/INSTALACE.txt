@@ -1,0 +1,274 @@
+# Finální návod na instalaci – FVE/ESS Node-RED flow
+
+Postupuj v tomto pořadí. Podrobnosti a zdůvodnění jednotlivých bodů (proč, jaké to má
+limitace) jsou v `README.txt` – tenhle soubor je stručný sled kroků k odškrtávání.
+
+---
+
+## KROK 0 – Co je hotové předem (vzdáleně, přes VRM Remote Console)
+
+Jde udělat rovnou přes **VRM Portal → tvoje instalace → Remote Console** (funguje odkudkoliv,
+žádné nastavování sítě, žádné SSH):
+
+- [ ] Settings → **Services → MQTT** → zapnout **"MQTT on LAN (plaintext)"**
+      ⚠️ Veškerá komunikace s Victronem jde přes MQTT. Bez tohoto kroku flow nedostane žádná
+      data a nic nezapíše.
+- [ ] Settings → **VRM online portal → VRM Portal ID** → opsat si ho (budeš ho potřebovat
+      v kroku 6 na stránce Konfigurace — je součástí každého MQTT tématu)
+- [ ] Settings → Relay → **oba kanály přepnout na "Manual"** (jinak s nimi Node-RED nepohne)
+
+(Volitelně, jen pokud bys z jiného důvodu chtěl(a) mít i terminálový přístup k zařízení: Settings
+→ General → "SSH on LAN" + root heslo. Pro tuhle instalaci to potřeba není.)
+
+## KROK 1 – Přístup k webovému rozhraní Node-RED
+
+SSH/root shell **není v celé instalaci nikde potřeba** (persistence jde přes jádrové `file`/
+`file in` uzly, žádná úprava `settings.js`). Jediné, co potřebuješ, je dostat se prohlížečem na
+`https://<IP-GX>:1881` – ať už jsi na místě v lokální síti, nebo přes jakýkoliv vzdálený přístup,
+který k Node-RED běžně používáš (VPN, port-forward, cokoliv už máš zavedené).
+
+- [ ] Ověřeno: `https://<IP-GX>:1881` se otevře v prohlížeči
+
+      ⚠️ **Je to HTTPS a port 1881, ne http:1880.** Venus OS servíruje Node-RED přes HTTPS na
+      portu 1881; holé `http` na 1880 ve výchozím stavu **neposlouchá** a zapíná se až ruční
+      úpravou konfiguračního souboru (viz Victron FAQ Q10 na victronenergy.com/live/venus-os:large).
+      Certifikát je self-signed, takže prohlížeč vyhodí varování — je potřeba dát
+      „Rozšířené → Přijmout riziko a pokračovat". Bez toho to vypadá, že adresa nefunguje.
+
+      Místo IP jde zkusit i `https://venus.local:1881`, když v síti funguje mDNS.
+
+## KROK 2 – Instalace Dashboard 2.0
+
+V Node-RED editoru (`https://<IP>:1881`):
+
+- [ ] Menu (☰) → **Manage palette** → záložka Install
+- [ ] Vyhledat přesně `@flowfuse/node-red-dashboard`, Install (potřeba internet, ~30 MB volného místa)
+
+  ⚠️ Ve výsledcích hledání "dashboard" se objeví i podobně pojmenované balíčky - **nezaměnit**:
+  - `node-red-dashboard-2` (bez `@flowfuse/`) – jiný, neoficiální a opuštěný projekt, NEinstalovat
+  - `@flowforge/node-red-dashboard` – starý název před přejmenováním firmy, deprecated
+  - cokoliv jako `@flowfuse/node-red-dashboard-2-ui-*` nebo `@<kdokoliv>/node-red-dashboard-2-*` –
+    to jsou volitelné doplňkové widgety (LED, chat, scheduler...) pro Dashboard 2.0, ne dashboard
+    samotný; nejsou pro tento flow potřeba
+
+## KROK 3 – Před importem se nic neupravuje
+
+Od verze 0.9.016 je `flow.json` **stejný pro všechny instalace**. Nic se negeneruje ani
+neupravuje, údaje o konkrétní instalaci se zadávají až po importu v dashboardu (krok 6).
+
+`config/defaults.json` a `scripts/build_flow.py` jsou jen pro vývoj flow. Při instalaci se jich
+nedotýkáš.
+
+## KROK 4 – Import do Node-RED
+
+- [ ] Node-RED Menu → **Import** → vybrat `flow.json`
+- [ ] Zvolit "new flow" (pokud jde o čistou instalaci) nebo importovat vedle stávajících flow
+- [ ] **Deploy**
+- [ ] Pokud flow hlásí chybějící typy uzlů `ui-*`, vrať se ke kroku 2 a znovu Deploy
+
+## KROK 5 – Nutné kroky HNED po importu
+
+**Nic se ručně nevybírá** — ve flow nejsou žádné uzly s dropdownem "Device".
+
+- [ ] Otevři Dashboard (adresa viz krok 6) → **Konfigurace → Údaje o instalaci** a vyplň:
+      - **VRM Portal ID** (z kroku 0) — **nejdřív tohle**. Bez něj flow neposílá keepalive,
+        Victron mu neposílá data a nic se nezapisuje. Když ho flow zachytí z MQTT samo
+        (stačí, aby byl otevřený displej GX nebo Remote Console), doplní se automaticky.
+      - název instalace, kapacita baterie (kWh), výkon FVE (kWp)
+      - zeměpisná šířka a délka (stačí z Mapy.cz na dvě desetinná místa) — pro předpověď počasí
+      - nominální max. přetok do sítě a max. nabíjecí výkon ze sítě
+      Řádek **„Kontrola udaju"** nahoře ukazuje, co ještě chybí; když je vše vyplněné, ukáže
+      „✔ vse vyplneno". Neplatnou hodnotu (třeba VRM ID se špatným počtem znaků) neuloží a řekne
+      proč.
+- [ ] **Mobilní aplikace pro zákazníka** (volitelné): Konfigurace → **Mobilní aplikace**. QR kód
+      se objeví do 2 minut po vyplnění VRM Portal ID (instalace potřebuje internet). Zákazník ho
+      naskenuje telefonem, otevře odkaz a zvolí „Přidat na plochu“. Odkaz jde poslat i e-mailem.
+      Aplikace jen zobrazuje – v elektrárně nic změnit nemůže.
+- [ ] Pokud se používají Shelly: **Relé a Shelly** → u zařízení vyplň IP adresu (lokální),
+      nebo device ID, auth key a server (cloud).
+
+- [ ] V editoru zkontroluj uzly `mq_in_system` a `mq_in_vebus` (tab „Konfigurace a mereni") —
+      pod nimi má do pár sekund svítit **„connected"**. Když svítí „connecting"/„disconnected",
+      není zapnutá MQTT služba v GX (krok 0) nebo neběží broker.
+- [ ] Otevři Dashboard → **Přehled** → řádek **„Spojeni s Victron (MQTT)"**. Do ~15 s má ukázat
+      „OK (posledni data pred N s)". Tohle je hlavní kontrola, že celý řetězec funguje.
+- [ ] Pokud hlídač hlásí varování, projdi v tomto pořadí:
+      (1) je v GX zapnuté Settings → Services → MQTT?
+      (2) je vyplněné a správné VRM Portal ID na stránce Konfigurace? (ověř přes
+      `test-mqtt-flow.json`)
+      (3) svítí u `mq_in_system` „connected"?
+
+## KROK 6 – Otevři Dashboard a projdi stránky
+
+URL: `https://<IP>:1881/dashboard` (cesta dle `ui-base` – výchozí `/dashboard`)
+
+Pokud lokální přístup na 1881 nejde vůbec (spojení odmítnuto), zbývá vzdálená cesta přes
+**VRM proxy** – odkaz najdeš v GX menu u Node-RED. Ta ale vyžaduje přihlášení do VRM v TOMTÉŽ
+prohlížeči; zkopírování adresy jinam skončí hláškou „No session".
+
+Pod každým prvkem je malým písmem popis, co dělá – projdi si je, ušetří to dohadování.
+
+- [ ] **Přehled** – ukazuje SOC, výkon FVE, spotřebu, ceny (může chvíli trvat, než dotečou první
+      hodnoty ze spot-price API a Victron sběrnice)
+- [ ] **Konfigurace instalace** – zkontroluj, že sedí statické údaje z kroku 3
+- [ ] **Konfigurace → Kalibrace SOC baterie** – interval (výchozí 14 dní) a „Dobít ze sítě nejpozději
+      v" (výchozí 13:00). V kalibrační den se z baterie neprodává a odpoledne se dobije do 100 %
+      bez ohledu na cenu; jak to celé funguje, je v nápovědě ⓘ u skupiny.
+- [ ] **Tarify a ceny** – nastav tarifní okna (pokud se liší od výchozích Po–Pá 01–07 a 12–15),
+      typ nákup/prodej fix/spot, případně fixní ceny. Hlavně vyplň **„Poplatky k nákupu"**
+      **„Poplatek nákup VT"**, **„Poplatek nákup NT"** a **„Poplatek z prodeje"** (Kč/kWh) –
+      spot je jen burzovní cena, k nákupu se přičítá distribuce a daň, z prodeje si výkupce
+      strhává poplatek. Bez nich regulace počítá s hrubým spotem. Nákupní poplatek se liší
+      podle distribučního tarifu, který určuje týdenní rozvrh nízkého tarifu níže na téže
+      stránce – proto jsou pole dvě. Poplatky platí **i pro fixní ceny** (a pro fixní cenu
+      v roli zálohy při výpadku spotových dat) – „fixní cena" je cena komodity, ne koncová
+      cena. Když už nějakou složku obsahuje, dej příslušný poplatek na nulu.
+- [ ] **Režimy** – nech **„Režim provozu"** na **Manual**, dokud vše neověříš (viz krok 7), pak
+      zvol automatiku. V Manualu je na stránce vidět jen blok **„Ruční nastavení exportu do/odběru
+      ze sítě"**; ostatní nastavení se ukážou po přepnutí na automatiku.
+      Blok **„Režim provozu"**:
+      - **„Automaticky – léto/zima podle data"** – přepíná se samo podle rozsahu **„Zima od/do"**
+        (např. 11-15 až 02-28), zákazník to pak nemusí řešit. **„Automaticky – letní / zimní
+        režim"** drží zvolené období napevno. Řádek **„Právě platí"** ukazuje skutečně aktivní období.
+      - **„Klidový setpoint LÉTO / ZIMA"** – hodnota držená, když nezasahuje žádný mechanismus.
+        0 = nula na elektroměru; záporná (např. −50 W) drží slabý přetok a vyloučí odběr ze sítě
+        při krátkých špičkách. V zimě se hodí menší přetok (např. −10 W).
+      - **„Zobrazit / upravit nastavení pro"** – léto a zima mají každé vlastní nastavení
+        a na stránce je vidět vždy jen jedno (výchozí = právě platné). Projdi **obě**.
+      Bloky profilu (LÉTO i ZIMA zvlášť):
+      - **„Min. prodejní cena pro export"** – spodní hranice pro jakýkoli prodej. Pro vybíjení
+        baterie musí cena navíc patřit do nejdražší čtvrtiny dne.
+      - **„Plná baterie od (%)"** – nad touto hranicí se pošle plný výkon do sítě, jinak by FVE
+        při plné baterii zůstala uškrcená na spotřebu domu. Výchozí 97 %.
+      - **„Nikdy nevybíjet baterii do sítě"** – z baterie se neprodává vůbec, do sítě jde jen
+        skutečný přebytek výroby. Hodí se typicky v zimním profilu, když se topí elektřinou.
+      - **„% rezervováno pro domácnost"** – pod tuto hranici žádný prodej z baterie nesáhne.
+      - **„Prodej do sítě při baterii od nastavených % SOC"** (mechanismus A) – zároveň spouštěcí
+        podmínka i dno, pod které tento prodej nesáhne.
+      - **„% kapacity k obchodování"** a **„Min. cena pro prodej z baterie"** (mechanismus B) –
+        denní objem plánovaného prodeje a jeho cenové dno.
+      - **Nabíjení ze sítě**: **„Nutné % SOC"** se do svého času nabije vždy, i dráž, a je zároveň
+        dnem pro prodej (0 = vypnuto; v létě výchozí 0). **„Při záporné ceně nabít na 100 %"**
+        platí pro koncovou cenu včetně poplatků. Jen v zimě navíc **„Cílové % SOC při nízké ceně"**
+        s časem a **„Max. cenou"** (0 = bez stropu) – snižuje se podle předpovědi FVE. Kdy se bude
+        nabíjet, je vidět na Přehledu v řádku „Aktuální plán".
+      - **Ranní odklad (C)** je jen v letním profilu (v zimě se neuplatňuje).
+- [ ] **Rele a Shelly** – nastav prahy pro obě relé, u Shelly zapni jen ta zařízení, která
+      skutečně existují (`enabled`)
+- [ ] **Napětí a ochrana** – zkontroluj, že se táhnou reálná napětí fází. Je tu i přepínač
+      **„Napěťová ochrana aktivní"** – nech zapnutý (je to bezpečnostní funkce). Při vypnutí
+      se napětí dál měří a zobrazuje, jen se podle něj neomezuje výkon přetoku.
+- [ ] **Statistika** – prázdná do prvního běhu, to je v pořádku
+
+## Data posílaná na server
+
+Flow se hlásí na server vrm.elektrarnycerny.cz: 4× denně **heartbeat** (VRM Portal ID, název
+instalace, verze, režim, nastavení prodeje, SOC a stav regulace) a každé 2 minuty **živé údaje
+pro mobilní aplikaci** (výkon FVE, spotřeba, síť, baterie, SOC, ceny a plán; server drží jen
+posledních 24 h). Přihlašovací údaje, adresy ani klíče Shelly se neposílají. Kdo hlášení nechce,
+vypne v Node-RED uzly „POST heartbeat“ a „POST zive udaje“ (záložka Statistika) – mobilní
+aplikace pak nefunguje, regulace běží dál beze změny.
+
+## KROK 7 – Ověření v režimu Manual, než pustíš Auto
+
+V režimu Manual se regulace pořád počítá a zobrazuje doporučení, ale do ESS nezapisuje nic –
+bezpečné na vyzkoušení bez rizika neočekávané akce na reálné soustavě.
+
+- [ ] Na Přehledu sleduj pole **„Stav dodavky/nabijeni"**. V Manualu začíná textem
+      `MANUAL, doporuceni:` a za svislítkem ukazuje skutečný tok na přípojce
+      (`do site N W` / `ze site N W`). Mění se důvod podle SOC/ceny/času tak, jak očekáváš?
+- [ ] Vyzkoušej relé: Relé a Shelly → GX Relé 1 → **Režim: Trvale zapnuto** a ověř, že relé
+      fyzicky sepne (funguje i v globálním režimu Manual). Pak vrať režim zpět na Vypnuto nebo
+      Automaticky. Totéž pro Relé 2.
+- [ ] Na stránce Režimy (v režimu Manual) vyzkoušej „Ruční nastavení exportu do/odběru ze sítě" s malou hodnotou (např. 100 W) a ověř
+      na Victron GX displeji / VRM, že se Grid Setpoint skutečně změnil – **tímto zároveň ověříš
+      znaménkovou konvenci** (⚠️ otevřený bod č. 1 v README): kladná hodnota by měla znamenat
+      odběr ze sítě, záporná export. Pokud je to obráceně, uprav znaménko v `ex_decide`
+      a přegeneruj flow.
+- [ ] **Test limitu přetoku:** přepni na automatiku a v platném profilu nastav „Prodej do sítě při
+      baterii od nastavených % SOC" schválně VÝŠE než
+      aktuální SOC (aby nebyl důvod exportovat). Na Přehledu má být `zadny-zasah (0 W, strop 0 W)`
+      a na VRM/displeji **MaxFeedInPower = 0** – tedy nic neteče do sítě. Pak sniž práh pod
+      aktuální SOC a ověř, že se strop zvedne na nominál.
+      (Pokud máš nastavený záporný klidový setpoint, bude strop místo nuly roven jeho velikosti –
+      u −50 W tedy 50 W. To je správně.)
+- [ ] **Test vypínače napěťové ochrany:** na stránce Napětí a ochrana ho vypni a zkontroluj,
+      že „Krok omezení" ukáže vypnutou ochranu a „Strop" 100 % nominálu, zatímco napětí fází
+      se dál aktualizuje. Pak zase zapni.
+
+## KROK 8 – Přepnutí do Auto
+
+- [ ] Až budeš mít ověřené znaménko setpointu a základní chování, přepni Režimy → Auto
+- [ ] Sleduj prvních pár hodin/dní, hlavně v době přechodu tarifů a kolem poledne (špička výroby)
+- [ ] Ve večerní špičce zkontroluj, že se opravdu prodává: „Stav dodavky/nabijeni" má ukazovat
+      `prodej-A-z-baterie` nebo `prodej-z-baterie` a za svislítkem odpovídající `do site N W`
+- [ ] Status uzlu „Naplanuj prodej z baterie" (tab Prodej z baterie) píše, kolik oken je vybraných
+      a kolik kWh z denního objemu ještě zbývá – dobrá kontrola, že měření prodané energie funguje
+
+## KROK 9 – Zbývající otevřené body k průběžnému ověření
+
+Nejsou blokující pro spuštění, ale hlídej si je (plný popis v `README.txt`, kap. 6):
+
+- [ ] Formát odpovědi spotovaelektrina.cz – pokud se na stránce Tarify graf/ceny netáhnou,
+      zkontroluj přímo odpověď API (`curl`) a uprav funkci `t_parse`
+- [ ] Shelly lokální zařízení – pokud jde o Gen2/Plus/Pro model, uprav `sh_local_decide`
+      (výchozí předpoklad je Gen1 REST)
+- [ ] Tarifní editor (vlastní Vue komponenta) – pokud se při ukládání chová divně, zkontroluj
+      konzoli prohlížeče (F12)
+- [ ] **MQTT keepalive**: bez něj broker po 60 s přestane publikovat. Flow posílá udržovací
+      keepalive po 30 s automaticky. Kdyby data chodila jen chvíli po Deployi a pak ustala,
+      podívej se na uzel `mq_keepalive` — musí pravidelně blikat zeleně.
+
+---
+
+## Rychlá diagnostika – nechodí data z Victronu
+
+Než začneš cokoliv měnit v hlavním flow, otestuj MQTT **izolovaně**:
+
+1. Naimportuj (do prázdného Node-RED, nebo vedle stávajícího flow) `test-mqtt-flow.json`
+2. Deploy, sleduj Debug panel
+3. Do ~10 s mají chodit zprávy „TEST: prijata data" (SOC, PV, spotřeba, síť)
+4. V Debug panelu se objeví i **žluté varování s VRM Portal ID** — porovnej ho s polem
+   VRM Portal ID na stránce Konfigurace. Když se liší, je to příčina toho, že hlavní flow nic
+   nezapisuje.
+5. Když nechodí vůbec nic:
+   - zkontroluj, že je v GX zapnuté Settings → Services → MQTT
+   - u uzlu „MQTT broker" v editoru má svítit „connected" (jinak broker neběží)
+
+## Rychlá diagnostika – data chodí, ale neprodává se
+
+Projdi v tomto pořadí, každý bod má vlastní ukazatel:
+
+1. **Režim** – na Přehledu řádek „Rezim". V Manualu se nezapisuje nic.
+2. **Stav dodavky/nabijeni** – důvod řekne, kde to vázne:
+   `zadny-zasah` = nesplněné prahy, `A-ceka-na-prebytek` = podmínky platí, ale není co poslat,
+   `prodej-A-z-baterie` / `prodej-z-baterie` = prodává se.
+3. **Napěťová ochrana** – stránka Napětí a ochrana, „Povoleny strop vykonu". Při 0 % se neprodá
+   nic, i když důvod hlásí prodej. Status uzlu `v_fsm` v editoru ukazuje i odpočet do uvolnění.
+4. **Cena** – vybíjení baterie mechanismem A jede jen v nejdražší čtvrtině dne, ne kdykoliv
+   nad prahem. Přes den mimo špičku je `A-ceka-na-prebytek` normální stav.
+5. **Feed-in excess DC-coupled PV** v GX (Settings → ESS) přepíná flow samo: když export
+   nechce, vypne ho, a když chce prodávat, zapne ho. Na Přehledu je to vidět jako
+   `, pretok FVE zakazan` v řádku „Stav dodavky". Ručně ho v GX neměň, flow by ho v režimu Auto
+   stejně přepsalo. V režimu Manual flow nezapisuje nic; vrátí jen vlastní zákaz, když ho předtím
+   samo nastavilo.
+
+## Rychlá tabulka – co upravit a kde
+
+Všechno, co se liší instalaci od instalace, se mění v dashboardu. Do kódu ani do `flow.json` se
+nesahá, hodnoty se ukládají samy a přežijí restart i nahrání nové verze flow.
+
+| Chci změnit | Kde |
+|---|---|
+| Název instalace, **VRM Portal ID**, kapacita baterie, kWp, souřadnice | Konfigurace → Údaje o instalaci |
+| **Nominální max. přetok do sítě**, max. nabíjecí výkon | Konfigurace → Údaje o instalaci |
+| Shelly: IP adresa, device ID, auth key, server | Relé a Shelly → skupina daného zařízení |
+| Prahy a časování napěťové ochrany | Napětí a ochrana |
+| Tarify, prahy exportu, klidový setpoint, auto/manual, léto/zima, ranní odklad | Tarify / Režimy |
+| Interval kalibrace baterie, čas odpoledního dobití | Konfigurace → Kalibrace SOC baterie |
+| URL spotových cen, adresa heartbeatu, podmínky kalibrace ze slunce | Stejné pro všechny instalace, mění se jen novou verzí flow |
+
+---
+
+Po dokončení kroku 8 je instalace v provozu. Cesty k uloženým datům (přežijí restart Node-RED):
+`/data/home/nodered/.node-red/fve-flow-data/config-state.json` a `.../calibration-state.json`.

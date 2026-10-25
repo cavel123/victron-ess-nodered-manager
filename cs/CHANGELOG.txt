@@ -1,0 +1,768 @@
+# Changelog – Node-RED flow pro rizeni FVE + baterie (Victron ESS)
+
+Nejnovejsi zaznam je nahore.
+
+Nadpis zaznamu ma tvar `## <verze> – <RRRR-MM-DD>`; validace ten tvar kontroluje, takze se neda
+zapomenout ani na datum.
+
+Cislo verze se zvysuje pri KAZDE zmene: 0.9.001, 0.9.002, ... Zdrojem pravdy je konstanta
+`VERSION` v `scripts/build_flow.py`; zobrazuje se na Prehledu pod stavem baterie a vypisuje ji
+i generator pri sestaveni. Validace odmitne flow sestavit, kdyz `VERSION` nesouhlasi s nejnovejsim
+zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
+
+Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
+
+
+## 0.9.053 – 2026-10-25
+
+- **Verejna varianta pro GitHub:** generator vedle flow.json vytvari i verejna/flow.json - stejne
+  flow s jinym tokenem pro server monitoringu. Instalace z verejne varianty se hlasi na server
+  a funguje jim mobilni aplikace; server je v prehledu a v tydennim mailu uvadi zvlast jako
+  "Z GitHubu" (s poctem) a neposila na ne poplachy. Token mych instalaci ve verejne variante neni
+  (hlida generator) - ten otevira prehled instalaci.
+- README a INSTALACE: popis, jaka data flow posila na server (monitoring, mobilni aplikace).
+
+## 0.9.052 – 2026-10-25
+
+- Blok "Podporte aplikaci": novy uvodni text.
+
+## 0.9.051 – 2026-10-25
+
+- Blok "Podporte aplikaci": odstranen radek "Zprava pro prijemce" s tlacitkem Kopirovat - zprava
+  je soucasti QR platby.
+
+## 0.9.050 – 2026-10-25
+
+- Konfigurace: "Podporte aplikaci" je opet samostatny blok (at se neplete s mobilni aplikaci).
+  Nove v nem cislo uctu a zprava pro prijemce s tlacitky Kopirovat, QR platba s tlacitkem
+  Stahnout QR a rada, jak QR platbu pouzit na telefonu.
+
+## 0.9.049 – 2026-10-25
+
+- **Prehled: tabulka energie dnes** pod baterii a tokem energie - Dodano do site / Odebrano ze site /
+  Vyroba FVE od pulnoci. Udaje jsou z pocitadel Victronu (elektromer, MPPT, AC stridac FVE) pres
+  MQTT - stejna cisla jako ve VRM, bez internetu a bez VRM tokenu. Stav pocitadel o pulnoci se
+  uklada do energy-day.json (zapis zhruba jednou denne), takze restart Node-RED denni cisla
+  nevynuluje. Instalace bez pocitadla (napr. bez elektromeru) dostane hodnotu dopoctenou
+  z okamziteho vykonu; zdroj je v napovede po najeti mysi na policko.
+- "kWh dodano do site dnes" ve skupine Dnesni statistika je nove stejne cislo (z elektromeru).
+- Konfigurace: blok "Podporte aplikaci" na konci skupiny Mobilni aplikace - text s cislem uctu, QR platba
+  a kontakt pro napady a hlaseni chyb.
+
+## 0.9.048 – 2026-10-25
+
+- **Mene tabu v editoru Node-RED: 5 misto 11** (pri nasazeni nove verze se jich maze polovina):
+  Konfigurace a mereni / Regulace (ceny, napeti, prodej, nabijeni, kalibrace, ESS) / Rele a Shelly /
+  Statistika / Dashboard. Sekce sloucenych tabu jsou na spolecnem tabu pod sebou, kazda s nadpisem
+  "===== <puvodni nazev> =====". Logika ani ID uzlu se nemeni; mezi sekcemi jednoho tabu vedou
+  draty primo, takze ubylo pomocnych link uzlu.
+- **Pri prechodu na tuto verzi** je potreba jeste naposledy smazat vsech 11 starych tabu (lze
+  oznacit vic tabu najednou s Cmd/Ctrl a smazat), pak importovat novy flow.json.
+
+## 0.9.047 – 2026-10-25
+
+- Oprava: ranni odklad (C) mohl prebit nabijeni na nutne SOC, kdyz byl jeho prah SOC nastaveny niz
+  nez nutne SOC. Pod nutnym SOC (a behem naplanovaneho nabijeni ze site) se odklad nespousti;
+  na Prehledu "vypnuto - baterie je pod nutnym SOC, nabiji se".
+- Overeno testem: kdyz SOC klesne pod nutne SOC tesne pred terminem, nabiji se hned plnym vykonem
+  ve vsech zbyvajicich ctvrthodinach, i kdyz se cil nestihne (na Prehledu "nestihne se, chybi X kWh").
+
+## 0.9.046 – 2026-10-25
+
+- **Zalozni zdroj spotovych cen: OTE (ote-cr.cz).** Kdyz spotovaelektrina.cz nedoda ceny na dnesek
+  (nebo po 13:30 na zitrek), stahnou se z OTE - oficialniho zdroje, ze ktereho berou vsichni.
+  OTE uvadi EUR/MWh, prepocet kurzem EUR z CNB (stahuje se jednou denne; kdyz nedorazi, pouzije se
+  posledni znamy). Na Prehledu je u aktualni ceny pripisek "(OTE)", kdyz je cena z OTE, a
+  "(fix - chybi spot)", kdyz spot chybi uplne a pocita se s fixni cenou.
+- **Dny zmeny casu:** podzimni den ma 100 ctvrthodin (02:00-03:00 dvakrat - bere se prumer obou
+  cen), jarni 92 (02:00-03:00 chybi - doplni se cenou nasledujici hodiny). Do ted se pocitalo
+  pevne s 96 hodnotami a ceny po 02:00 by se posunuly o hodinu. Plati pro oba zdroje.
+- Oprava: kdyz spotovaelektrina.cz vratila prazdna data, zustaly v pameti VCEREJSI ceny a podle nich
+  se pocitala aktualni cena i "levny cas". Ted se den bez cen bere jako chybejici (zalozni zdroj,
+  pripadne fixni cena).
+
+## 0.9.045 – 2026-10-25
+
+- **Oprava: pri chybejicich spotovych cenach se nenabijelo ani nutne SOC.** Planovac nabijeni ze
+  site den bez cen preskocil, takze nemel z ceho vybirat - a nutne SOC, ktere ma byt pojistkou,
+  se nenaplanovalo. Stalo se 25.10.2026: v den zmeny casu (25 hodin) vratilo API
+  spotovaelektrina.cz prazdna data pro dnesek i zitrek. Nove se pro den bez spotovych cen pocita
+  s fixni nakupni cenou (stejne jako u aktualni ceny na Prehledu). Na Prehledu to v radku
+  "Aktualni plan" hlasi "(chybi spotove ceny - pocita s fixni cenou)".
+- Cilove SOC pri nizke cene se s fixni cenou uplatni jen, kdyz je fix + poplatek pod stropem ceny.
+- Pro zitrek se zalozni fixni cena pouzije az od 15:00 - dopoledne zitrejsi ceny jeste nejsou
+  zverejnene a je to normalni stav.
+
+## 0.9.044 – 2026-10-16
+
+- Konfigurace: skupina "Kalibrace baterie" prejmenovana na "Kalibrace SOC baterie".
+- Horni lista na telefonu: ikona a verze zase vedle sebe (ikona vlevo, verze vpravo), jen mensi
+  nez na pocitaci, aby se vesel nadpis stranky.
+
+## 0.9.043 – 2026-10-16
+
+- Horni lista na telefonu (okno uzsi nez 700 px): misto celeho loga Elektrarny Cerny jen ikona
+  (dal s odkazem na web) a cislo verze drobne pod ni, aby se vesly nadpisy stranek. Na sirsi
+  obrazovce beze zmeny.
+
+## 0.9.042 – 2026-10-16
+
+- **Kalibracni rezim od uplynuti intervalu.** Neprodava se uz od dne, kdy uplyne interval kalibrace
+  (ne az v naplanovany kalibracni den), az do dosazeni 100 %: A, B ani ranni odklad, klidovy
+  setpoint 0, prebytek FVE jde do baterie; do site tece jen to, co plna baterie nepobere.
+- **Dobiti od 95 %:** v kalibracnim rezimu se baterie od casu "Dobit ze site nejpozdeji v"
+  (vychozi 13:00) ze site dobije do 100 %, jakmile prekroci nastaveny SOC - v kterykoli den rezimu.
+  Pred timto casem ne, za slunecneho dne by ji dobilo slunce zdarma. Novy parametr "Po uplynuti
+  intervalu dobit do 100 % uz od SOC (%)" ve skupine Kalibrace baterie (vychozi 95 %).
+- Naplanovany kalibracni den (nejlepsi ze 3 dnu) zustava jako pojistka, kdyby baterie na prah
+  nedosla - v nem se dobiji pri jakemkoli SOC jako dosud.
+- Prehled: v cekacich dnech je u baterie cervene "Kalibrace baterie - prodej vypnuty", v kalibracni
+  den "Den kalibrace baterie". Poznamka u planu prodeje zni "(az po kalibraci)". Novy duvod ve
+  "Stav dodavky/nabijeni": `kalibrace-cekani`.
+- Kalibrace ze slunce (dny 10-13) beze zmeny.
+
+## 0.9.041 – 2026-10-15
+
+- Kalibrace baterie (ze slunce i kalibracni den s dobitim) konci az na **100 %** SOC (drive 99,5 %).
+  Datum posledniho plneho nabiti se zapisuje taky az pri 100 %. Pro BMS, ktery 100 % nehlasi,
+  plati dal pojistka: pri dobijeni nad 98 % hodinu bez rustu = hotovo.
+- Prehled, "Aktualni plan": v den kalibrace ma prodej z baterie poznamku "(dnes az po kalibraci)" -
+  okna planovaneho prodeje (B) se uplatni az po dobiti na 100 %.
+
+## 0.9.040 – 2026-10-15
+
+- **Kalibrace baterie predelana - uz zadne nocni nabijeni poloprazdne baterie.** Do ted se po 14
+  dnech bez plneho nabiti nabijelo ze site v kazdem levnem tarifu (typicky v noci z ~50 %, 25 kWh),
+  zastavilo se koncem NT a dokoncovalo po kouscich.
+- **Kalibracni den:** po uplynuti intervalu se ze 3 nasledujicich dnu vybere ten s nejlepsi
+  predpovedi vyroby (predpoved se nove stahuje na 4 dny). V ten den se z baterie nic neprodava
+  (A, B ani ranni odklad), klidovy setpoint je 0 a prebytek FVE jde do baterie. Odpoledne se ze site
+  dobije do 100 % bez ohledu na cenu - jakmile vyroba trvale klesne pod spotrebu (nejdriv 2 h pred
+  nastavenym casem), nejpozdeji v nastavenem case (vychozi 13:00). Typicky jde jen o par kWh.
+- **Kalibrace ze slunce** (posledni 4 dny pred koncem intervalu, pri 14 dnech dny 10-13): podminka
+  predpovedi zmirnena z 1,5x na 1x chybejici energie. I tento den ma klidovy setpoint 0.
+- **Nova skupina "Kalibrace baterie"** na strance Konfigurace: interval (dny, vychozi 14), cas
+  "Dobit ze site nejpozdeji v" (vychozi 13:00), radek se stavem a podrobna napoveda, jak kalibrace
+  funguje.
+- **Prehled:** v den kalibrace je u baterie tucny cerveny odkaz "Den kalibrace baterie" na stranku
+  Konfigurace s napovedou. Radek kalibrace ukazuje i naplanovany den ("kalibracni den naplanovan
+  na ct 16.10.").
+- Pojistka: kdyz BMS pri dobijeni drzi SOC nad 98 % hodinu a dal nepusti (nektere baterie 100 %
+  nehlasi), kalibrace se bere jako hotova - jinak by byl kazdy dalsi den kalibracni.
+- Nove duvody ve "Stav dodavky/nabijeni": `kalibracni-den`, `kalibrace-dobiti`
+  (`kalibrace-baterie` zrusen).
+
+## 0.9.039 – 2026-10-13
+
+- Konfigurace instalace: kapacita baterie a vykon FVE na jednom radku, stejne tak zemepisna sirka
+  a delka; kazda dvojice ma jednu spolecnou napovedu. Popisky souradnic zkraceny na "Sirka" /
+  "Delka", aby se v polovicnim poli nezkracovaly.
+- Rezimy: nadpisy "LETO / ZIMA - prodej do site a z baterie".
+- Rezimy, radek "Prave plati" je cerveny a ukazuje i MANUAL; prekresli se hned po zmene rezimu
+  (ne az po minute).
+- Rezimy, blok prodeje - nove poradi a popisky: "Kolik % baterie rezervovano pro domacnost"
+  (nahore), "Min. prodejni cena pro export pri nadbytku", "Prodej do site pri baterii od
+  nastavenych % SOC (mechanismus A)", "Kolik % kapacity baterie budu obchodovat (mechanismus B)",
+  "Min. cena pro prodej z baterie (mechanismus B)", pod tim "Plna baterie od (%) ... (doporuceno
+  97 %)" a "Nikdy nevybijet baterii do site". Rezerva a % k obchodovani jsou ciselna pole misto
+  posuvniku (dlouhy popisek by posuvnik vytlacil za okraj).
+
+## 0.9.038 – 2026-10-13
+
+- **Uklid zastaralych klicu v ulozene konfiguraci.** Pri startu se z konfigurace odstrani klice,
+  ktere tato verze nezna (pozustatky starsich verzi, napr. `relay1.priority` nebo jednotny poplatek
+  `buyFeePerKWh` z doby pred rozdelenim na VT/NT). Do ted se pri slouceni s vychozimi hodnotami
+  zachovavaly, byly videt ve vypisu konfigurace a ve stazene zaloze - a obnova takove zalohy je
+  hlasila jako "Nezname pole". Uklid probehne jednou, soubor se hned prepise a log vypise, co se
+  odstranilo. Regulace ani nastaveni se tim nemeni - tyto klice nic necetlo.
+- Obnova ze zalohy: hlaska u pole, ktere tato verze nepouziva, rika "tato verze nepouziva
+  (zastarale nebo nezname) - preskoceno" misto "Nezname pole". Starsi zalohy ji dal mohou ukazat,
+  nove stazene uz ne.
+- Generator nove kontroluje, ze kazde pole dashboardu uklada jen klic, ktery je v defaults.json -
+  jinak by ho uklid pri startu smazal.
+
+## 0.9.037 – 2026-10-13
+
+- **Stranka Rezimy prestavena na dva profily - LETO a ZIMA.** Kazde obdobi ma vlastni nastaveni
+  prodeje i nabijeni ze site; regulace pouzije profil podle radku "Prave plati". Na strance je
+  videt vzdy jen jeden profil (vychozi = prave platny), prepinacem "Zobrazit / upravit nastaveni
+  pro" jde otevrit i druhy a pripravit ho dopredu.
+- **"Rezim provozu"** je jeden vyber misto tri prepinacu: Automaticky - leto/zima podle data,
+  Automaticky - letni rezim, Automaticky - zimni rezim, Manual. Pod nim klidovy setpoint pro
+  leto a zimu vedle sebe, rozsah zimy (jen pri volbe podle data) a radek "Prave plati".
+- **Manual schova vsechna automaticka nastaveni**; zustane jen blok "Rucni nastaveni exportu
+  do/odberu ze site" (drive "Rucni ESS setpoint"), ktery je naopak v Auto schovany.
+- Blok **"prodej do site a baterie"** (v kazdem profilu): Min. prodejni cena pro export, Plna
+  baterie od, Nikdy nevybijet baterii do site, % rezervovano pro domacnost, "Prodej do site pri
+  baterii od nastavenych % SOC" (mechanismus A, drive "Prah SOC pro export"), % kapacity
+  k obchodovani a Min. cena pro prodej z baterie (mechanismus B).
+- Blok **"nabijeni ze site"**: nutne SOC (s casem "dosahnout do") a nabijeni pri zaporne cene
+  jsou nove **i v lete**; cilove SOC pri nizke cene (s casem a cenovym stropem) jen v zime.
+  V lete jsou obe funkce ve vychozim stavu vypnute (nutne SOC 0 %, zaporna cena vyp).
+- **Ranni odklad (C)** je soucast letniho profilu - v zimnim zobrazeni je schovany (v zime se
+  neuplatnuje, beze zmeny).
+- Vypinac "Obchodovat i v zimnim rezimu" zrusen: stejny ucinek ma "Nikdy nevybijet baterii do
+  site" v zimnim profilu. Odemceni uskrcene FVE pri plne baterii uz nezavisi na tom, jestli FVE
+  bezi (vyjimka platila jen pro vypnute zimni obchodovani).
+- **Ulozena konfigurace se prevede sama** pri prvnim startu nove verze: dosavadni hodnoty se
+  zkopiruji do obou profilu, zimni specialni hodnoty (klidovy setpoint v zime, nutne/cilove SOC,
+  strop ceny, zaporna cena) do zimniho; "Obchodovat v zime = vyp" se prevede na "Nikdy nevybijet"
+  v zimnim profilu. Totez plati pro zalohy konfigurace ze starsich verzi pri obnove.
+- Prehled, "Aktualni plan": cast o nabijeni ze site zacina "nabijeni ze site:" misto "zima:".
+- Pole s dlouhym popiskem (prodej od % SOC, nutne a cilove SOC, prah jasnosti ranniho odkladu)
+  jsou ciselna misto posuvniku - dlouhy popisek vytlacil posuvnik za okraj skupiny.
+- Duvod zasahu v "Stav dodavky/nabijeni" `zimni-dobijeni` se jmenuje `nabijeni-ze-site` (nabiji se
+  i v lete). Tab v editoru Node-RED: "Nabijeni ze site a predikce".
+
+## 0.9.036 – 2026-10-13
+
+- Tlacitka konfigurace jsou v jednom radku hned pod nadpisem "Kompletni aktualni konfigurace
+  (JSON)": Zkopirovat do schranky, Stahnout jako soubor, Nahrat ze zalohy. Panel obnovy se
+  rozbali az po kliknuti na "Nahrat ze zalohy", pod tim je vypis konfigurace.
+
+## 0.9.035 – 2026-10-13
+
+- **Obnova konfigurace ze zalohy** (Konfigurace -> pod vypisem konfigurace). Soubor stazeny
+  tlacitkem "Stahnout jako soubor" (nebo vlozeny text) se nejdriv zkontroluje: neplatne hodnoty
+  (spatny typ, cas, rozsah, neznamy rezim) cely pokus odmitnou, nezname pole se ignoruji
+  s upozornenim. Pak se ukaze prehled zmen (z -> na) a teprve "Pouzit zalohu" konfiguraci
+  prepise - stejnou cestou jako pri startu Node-RED, takze se aktualizuji vsechna pole.
+- Dve moznosti: **"Obnovit tuto instalaci"** prevezme vse krome VRM Portal ID (napr. po
+  preinstalaci GX); **"Prevzit jen nastaveni regulace"** vynecha nazev instalace, baterii, kWp,
+  souradnice a nazvy a pripojeni rele a Shelly (sablona z jine instalace).
+- **VRM Portal ID se ze zalohy nikdy neprebira.** Kdyz je zaloha z jine instalace, prehled to
+  vyrazne rekne.
+- Zmena nominalniho pretoku do site je v prehledu zvyraznena a "Pouzit" jde az po zaskrtnuti
+  souhlasu. Auth key Shelly se v prehledu nezobrazuje.
+- Pred pouzitim se dosavadni konfigurace ulozi stranou (config-before-restore.json, prezije
+  restart) a tlacitko **"Vratit predchozi"** ji obnovi.
+
+## 0.9.034 – 2026-10-13
+
+- Nadpisy skupin: "GX Rele 1/2 (v elektrarne)", "Shelly lokal 1/2 (na mistni siti dle IP adresy)".
+- Konfigurace, "Kompletni aktualni konfigurace (JSON)": tlacitka "Zkopirovat do schranky"
+  a "Stahnout jako soubor" (konfigurace-<vrmId>-<datum>.json).
+
+## 0.9.033 – 2026-10-13
+
+- **Napeti a ochrana:** nove poradi - nahore "Nastaveni ochrany" (vypinac), pod nim "Napeti
+  fazi", pak "Stav ochrany". Pri vypnute ochrane je "Stav ochrany" (stav i prahy) schovany -
+  nic z nej se neuplatni. Skryva se cela skupina pres ui-control; Dashboard si stav pamatuje
+  i po obnoveni stranky.
+- **Rele a Shelly:** "Rezim" je u kazdeho zarizeni na prvnim miste. V rezimu "Vypnuto" se
+  ostatni nastaveni zarizeni (nazev, prahy, okno, pripojeni Shelly) i jejich napovedy schovaji;
+  po prepnuti na Automaticky nebo Trvale zapnuto se zase objevi s puvodnimi hodnotami.
+
+## 0.9.032 – 2026-10-13
+
+- Skupina na strance Rezimy se jmenuje "Baterie - obchodovani a rezerva (mechanismus B)".
+
+## 0.9.031 – 2026-10-13
+
+- **Oprava: ranni odklad se rozhodoval podle NAKUPNI ceny, spravne ma podle PRODEJNI.** Odklad
+  posila ranni prebytek do site misto do baterie, rozhoduje tedy, kolik za energii dostanu.
+  Zadani (kap. 5C) mluvi o ukonceni dodavky do site pri poklesu ceny, implementace ale porovnavala
+  nakupni cenu vcetne distribuce. U spot/spot zakazniku se to skoro neprojevilo (obe ceny se hybou
+  spolu), u zakaznika s fixnim nakupem a spotovym prodejem byla podminka splnena vzdy - odklad by
+  rano dodaval i pri nizkem nebo zapornem spotu.
+  Ted: "Min. prodejni cena pro odklad" je podlaha prodejni ceny (spot minus poplatek za prodej)
+  a navic musi byt ctvrthodina v nejdrazsi ctvrtine rana z PRODEJNICH cen. Pri fixnim prodeji se
+  nejdrazsi ctvrtina neuplatnuje.
+- Pojistka: pod "Min. cenou pro export" se odklad neuplatni a baterie se normalne nabiji -
+  stejne jako mechanismus A a "jen prebytek" do site pod touto cenou nic neposilaji.
+- **Po aktualizaci zkontroluj "Min. prodejni cenu pro odklad"** na instalacich, kde je odklad
+  zapnuty: drive se nastavovala vuci nakupni cene, ktera je o distribuci vyssi.
+- Stavovy radek odkladu na Prehledu rika, ktera cena co blokuje (Min. prodejni cena pro odklad,
+  Min. prodejni cena pro export, nejdrazsi ctvrtina rana).
+- **Revize napoved v celem dashboardu** (33 polozek). Opraveny vecne chyby - napovedy, ktere
+  popisovaly uz neplatne chovani: nominalni pretok pry omezuje i nabijeni ze site (od 0.9.0 ma
+  nabijeni vlastni hodnotu), nabijeci vykon pry plati i pro ranni odklad (ten ze site nenabiji),
+  poplatky pry ovlivnuji ranni odklad, zimni rezim pry "nabiji v noci podle predpovedi na
+  zitrek", nizky tarif pry slouzi "pro nocni dobijeni". U kazde ceny je nove vyslovne receno,
+  zda je NAKUPNI (vcetne distribuce) nebo PRODEJNI (po odecteni poplatku). "% k obchodovani"
+  nove rika, ze se tyka jen planovaneho prodeje B, ne mechanismu A. Odborne vyrazy (kvartil,
+  extraterestricka radiace, sezonne invariantni) nahrazeny srozumitelnym popisem. Stav
+  dodavky ma slovnicek vsech duvodu zasahu.
+- Popisek "Min. cena pro export" -> "Min. prodejni cena pro export".
+
+## 0.9.030 – 2026-10-11
+
+- Nadpis "Baterie 60 kWh" ma stejne pismo jako popisky ostatnich radku grafiky (FVE, Spotreba...),
+  ne tucne. Stejne v mobilni aplikaci.
+
+## 0.9.029 – 2026-10-11
+
+- Nad grafikou baterie na Prehledu je nadpis s kapacitou z konfigurace, napr. "Baterie 60 kWh".
+  Po zmene kapacity na strance Konfigurace se hned prekresli. Stejne v mobilni aplikaci.
+- Blok baterie a tok energie jsou o radek vyssi - s nadpisem by se delsi text kalibrace
+  (napr. v kalibracni den) do puvodni vysky nevesel a prekryval by radek planu.
+
+## 0.9.028 – 2026-10-11
+
+- **Mobilni aplikace (jen pro cteni).** Instalace kazde 2 minuty posila zakladni stav na
+  vrm.elektrarnycerny.cz: SOC, FVE, spotreba, sit, nabijeni/vybijeni baterie, stav regulace,
+  plan, predpoved, ranni odklad, kalibrace, ceny, tarif, spojeni s Victronem. Aplikace na
+  https://vrm.elektrarnycerny.cz/app/ to zobrazi stejne jako Prehled v dashboardu, vcetne grafu
+  poslednich 24 hodin (FVE, spotreba, SOC). Na telefon se prida pres "Pridat na plochu" - bez
+  App Store/Google Play, bez prihlasovani, funguje odkudkoli (ne jen z domaci site).
+- **Parovani:** stranka Konfigurace -> Mobilni aplikace ukazuje QR kod a odkaz (lze poslat
+  e-mailem). Tlacitko "Zneplatnit a vygenerovat novy klic" odpoji vsechny dosud sparovane telefony.
+- **Bezpecnost:** komunikace jen jednim smerem (instalace -> server), server do instalace nic
+  nezapisuje a aplikace se k instalaci nikdy nepripojuje. Kazda instalace ma vlastni klic pro
+  odesilani (bez nej server data odmitne - nikdo nemuze podstrcit cizi udaje) a vlastni klic
+  pro cteni (vidi jen svou instalaci). Na serveru jsou ulozene jen hashe klicu. Klic pro cteni
+  je v odkazu za '#', ktery se na server neposila, a do API jde jen v hlavicce - nedostane se
+  do logu. Opakovane spatne klice server po 20 pokusech za 10 minut odmita. Zadny spolecny
+  "superuzivatel" neexistuje.
+- Klice jsou na GX v samostatnem souboru mobile-state.json, ne v konfiguraci (tu dashboard
+  vypisuje celou).
+
+## 0.9.027 – 2026-10-11
+
+- Tabulky na Prehledu maji u kazde polozky ikonu: stav dodavky (sipky), rezim (robot = Automat,
+  ruka = Manual), predpoved (slunce za mrakem), ranni odklad (vychazejici slunce), nakupni
+  a prodejni cena (penize -/+), tarif (elektromer), spojeni s Victronem (zelene pripojeno,
+  cervene odpojeno).
+
+## 0.9.026 – 2026-10-11
+
+- V horni liste je misto textu "Elektrárny Černý" **logo firmy** (odkaz na elektrarnycerny.cz
+  zustava, verze vedle nej taky). Logo je ve flow vlozene primo (assets/logo-elektrarny-cerny.svg),
+  na GX neni potreba zadny soubor. Napis v logu je prevedeny na krivky, aby vypadal stejne i na
+  Windows a Androidu, kde puvodni pismo Avenir Next neni.
+
+## 0.9.025 – 2026-10-11
+
+- **Prehled: stavove radky ve dvou tabulkach vedle sebe** (jako baterie a tok energie nahore).
+  Vlevo regulace: Stav dodavky/nabijeni, Rezim, Predpoved vyroby, Ranni odklad. Vpravo ceny
+  a spojeni: nakupni a prodejni cena, distribucni tarif, spojeni s Victronem. Kazda polozka ma
+  nazev s ikonou (i) a pod nim hodnotu; (i) rozbali napovedu primo v tabulce. Vypadek spojeni
+  s Victronem je cervene. Na telefonu jsou tabulky pod sebou.
+- "Aktualni plan" je prvni radek hned pod grafikou.
+- Verze flow je v horni liste vpravo vedle odkazu Elektrárny Černý (neni soucasti odkazu),
+  uz ne pod grafikou.
+- Napoveda k "Stavu dodavky/nabijeni" uz nepopisuje zruseny tok za svislitkem.
+
+## 0.9.024 – 2026-10-11
+
+- **Prehled: misto ciferniku SOC blok baterie** vlevo vedle toku energie, tri radky:
+  1. stav nabiti jako baterie s vyplni a procenty (cervena pod 30 %, zluta pod 60 %, jinak zelena),
+  2. aktualni nabijeni (zelene, +) nebo vybijeni (oranzove, -) s pruhem; pod 30 W "v klidu",
+  3. stav kalibrace baterie (drive samostatny radek dole na strance), mensim pismem.
+  Vykon baterie se nove cte z Victronu (`system/0/Dc/Battery/Power`, kladne = nabijeni).
+- Radek "Stav dodavky/nabijeni" uz nekonci tokem na pripojce ("| do site 10 W") - dublovalo se
+  to s radkem Sit v toku energie.
+
+## 0.9.023 – 2026-10-11
+
+- Prehled, tok energie: pribyl ctvrty radek **Sit** - "Odber ze site" nebo "Dodavka do site"
+  s hodnotou a pruhem (skutecny tok na pripojce z elektromeru). Radek "Stav dodavky/nabijeni"
+  zustava beze zmeny.
+- **Napovedy pod prvky jsou schovane pod modrou ikonou (i)** vpravo pod kazdym prvkem; text se
+  ukaze po kliknuti a dalsim kliknutim zase schova. Ikona zabira vlastni radek - vedle popisku
+  ciziho widgetu Dashboard 2.0 nic vlozit neumi. Grafika toku energie ikony nema, popisky tam
+  staci. Verze pod SOC zustava videt stale.
+- Aktualizovana napoveda k radku "Aktualni plan" (zminovala uz neplatne nocni nabijeni).
+
+## 0.9.022 – 2026-10-11
+
+- **Oprava: plan prodeje z baterie (B) nebral v uvahu, kolik energie v baterii je.** Rozpocet
+  se pocital jen z "% kapacity k obchodovani", takze pri SOC 35 % plan hlasil 31 oken a 23,4 kWh,
+  ackoli nad dnem prodeje byly jen ~3 kWh. Prodalo by se nanejvys to, ale do PRVNICH oken planu
+  (16:15), ne do nejdrazsich. Ted planovac pocita s mensi ze dvou hodnot: zbytek denniho rozpoctu,
+  nebo energie nad dnem (rezerva pro domacnost, v zime navic nutne SOC). Plan se prepocitava
+  kazdych 5 minut, takze kdyz se baterie behem dne nabije, sam se rozroste. Na Prehledu je pak
+  videt, ze omezuje baterie: "(v baterii nad 30 % jen 3.0 kWh)".
+- Prehled: radek "Aktualni plan" je cerveny.
+- Odkaz "Elektrárny Černý" v horni liste je modry, stejne jako Spotreba v toku energie.
+- **Nove stranky README a Changelog v menu** - text obou souboru, jen ke cteni. Vklada se pri
+  sestaveni flow, odpovida tedy presne nasazene verzi. Protoze dashboard nema prihlaseni,
+  generator odmitne sestavit flow, kdyz dokumentace obsahuje token monitoringu, heslo k mailu
+  nebo jmeno znameho zakaznika. Jedno jmeno zakaznika bylo v README - anonymizovano.
+
+## 0.9.021 – 2026-10-11
+
+- **Oprava: tok energie na Prehledu ukazoval jen ikony** - bez popisku, hodnot a pruhu.
+  Ikona byla zapsana jako samouzaviraci znacka `<v-icon ... />`. Dashboard 2.0 sablonu nejdriv
+  rozparsuje jako HTML, kde samouzaviraci vlastni znacka neexistuje, a vse za ni spolkl jako
+  obsah ikony. Samostatny Vue, ve kterem se sablona pred vydanim zkousela, to snese - proto se to
+  neukazalo. Ted parove `<v-icon ...></v-icon>`.
+- Generator nove odmitne sestavit flow, kdyz ui-template obsahuje samouzaviraci znacku
+  komponenty - tahle chyba se uz nemuze vratit.
+- Overeno ve skutecnem Node-RED s Dashboardem 2.0 verze 1.33.0 (desktop i telefon), vcetne
+  odkazu "Elektrárny Černý" v horni liste.
+
+## 0.9.020 – 2026-10-11
+
+- **Prehled: SOC a tok energie vedle sebe.** Ciferník SOC je zmenseny na polovinu skupiny
+  a vpravo vedle nej jsou tri radky s ikonou, hodnotou a pruhem: FVE, Spotreba,
+  Prebytek / Deficit (zelene / cervene podle smeru). Popisky jsou kratke, aby se hodnota vesla
+  i na telefonu (overeno v sirce 170 px i pri 12,7 kW). Pruhy maji spolecne meritko podle
+  instalovaneho vykonu FVE (nebo vic, kdyz ho spotreba prekroci), takze je videt pomer na prvni
+  pohled. Hodnoty nad 1 kW v kW, pod tim ve W. Nahrazuje puvodni tri textove radky.
+  Verze flow zustava pod obema.
+- **Odkaz "Elektrárny Černý" vpravo v horni liste** na vsech strankach, vede na
+  https://elektrarnycerny.cz/ (otevira se v nove karte). Vlozeny pres misto '#app-bar-actions',
+  ktere na to Dashboard 2.0 ma pripravene.
+
+## 0.9.019 – 2026-10-11
+
+- **Zimni nabijeni ze site: dve hladiny SOC, kazda s vlastnim terminem, a i pres den.**
+  - **Nutne SOC** (novy parametr, vychozi 30 %) - nabije se VZDY, i kdyz je elektrina drazsi nez
+    strop, nejpozdeji do nastaveneho casu (vychozi 06:00). Vybiraji se nejlevnejsi ctvrthodiny
+    pred terminem. Nesnizuje se podle predpovedi. V zime je zaroven dnem pro prodej: A ani B pod
+    nej z baterie neprodaji (drive platilo jen v noci a vztahovalo se k jedinemu cili).
+  - **Cilove SOC pri nizke cene** (puvodni "Cilove % SOC pro nocni nabijeni", hodnota zustava) -
+    jen v ctvrthodinach s cenou pod stropem (puvodni "Max. cena", 0 = bez stropu jako dosud),
+    nejpozdeji do vlastniho nastaveneho casu (novy parametr, vychozi 06:00). Snizuje se podle
+    predpovedi FVE na den terminu.
+  - **Zaporna cena** (novy vypinac, vychozi zapnuto) - kdyz je koncova nakupni cena vcetne
+    poplatku pod nulou, nabije se na 100 %.
+  - **Pevne nocni okno 22:00-07:00 zmizelo.** Planuje se ve vsech znamych ctvrthodinach az do
+    terminu, takze se vyuzije i levne odpoledne (typicky vikend). Duvod zmeny: nedelni polední
+    cena byla nejlevnejsi ze dne, ale flow ji videt nemohlo.
+- **Oprava: u fixni nakupni ceny planovac radil okna podle spotu.** Ted pocita fix + poplatek
+  podle tarifu ctvrthodiny; pri stejne cene ma prednost nizky tarif.
+- Duvod zasahu v "Stav dodavky" se prejmenoval z `nocni-dobijeni` na `zimni-dobijeni`.
+- Prehled, radek "Aktualni plan": napr. "zima: nutne 30 % do 06:00 (5 ctvrthodin, od 02:15),
+  levne 80 % do 06:00 (12 ctvrthodin, od 13:00)". Kdyz se nutne SOC do terminu nestihne,
+  ukaze kolik chybi.
+- Nastaveni na strance Rezimy -> Zimni rezim: nutne SOC + cas, cilove SOC + cas, strop ceny,
+  zaporna cena. Casy se ukladaji pres hlidac formatu HH:MM.
+- Opravena zastarala napoveda u "Nikdy nevybijet baterii do site" (tvrdila, ze se musi rucne
+  zapnout Feed-in excess v GX - od 0.9.013 ho prepina flow samo).
+
+## 0.9.018 – 2026-10-06
+
+- **Kalibrace baterie ze slunce misto ze site.** Od 10. dne bez plneho nabiti flow kazde rano
+  (05:00-10:00) zkontroluje dnesni predpoved. Kdyz je index jasnosti aspon 50 % a predpovidana
+  vyroba pokryje chybejici energii do 100 % s rezervou 1,5x, vyhlasi **kalibracni den**: dokud
+  BMS nenahlasi 100 % (nejdele do 17:00), nejede mechanismus A (prebytek do site ani prodej
+  z baterie), B (prodej z baterie) ani C (ranni odklad) a prebytek jde do baterie. Jakmile je
+  baterie plna, zapise se datum a ten den uz vse jede normalne - vecerni A i B prodavaji z plne
+  baterie.
+  Duvod: nad "Prahem SOC pro export" posila A prebytek do site a nad "plnou baterii" z ni
+  prodava, takze za slunecneho dne s cenou nad prahem baterie na 100 % sama nedojde. Proto
+  heartbeaty ze vsech instalaci ukazovaly SOC 93-99 %.
+- **Kalibrace ze site jen jako zaloha:** po 14 dnech se odlozi, kdyz je na nejblizsi den dobra
+  predpoved (v noci podle predpovedi stazene ve 20:00). Natvrdo ze site az po 21 dnech.
+- Kalibracni den ma prednost pred vsim krome kalibrace ze site a zimniho nocniho dobijeni.
+  Strop exportu a pretok prebytku FVE zustavaji pri cene nad prahem otevrene - setpoint je
+  klidovy, takze ven jde jen to, co baterie nepobere (konec nabijeni, kdy BMS stahne proud).
+- Predpoved vyroby nese datum dne (`pvPredictionTodayIso`, `pvPredictionTomorrowIso`). Po pulnoci
+  je "dnesni" hodnota z vecerniho stazeni ve skutecnosti vcerejsek - kalibrace se v noci
+  rozhoduje podle spravneho dne.
+- Parametry v `config/defaults.json` -> `static.batteryCalibration` (stejne pro vsechny instalace):
+  `solarFromDays` 10, `solarMinClearness` 0.5, `solarEnergyReserve` 1.5, `solarDecideUntil` 10:00,
+  `solarDayUntil` 17:00, `gridHardLimitDays` 21.
+- Prehled: radek "Kalibrace baterie" ukazuje i kalibracni den, odlozeni kalibrace ze site a od
+  kdy se ceka na slunce. Radek mechanismu C v kalibracni den hlasi "vypnuto - kalibracni den".
+- Opraveny preklepy s cyrilskymi pismeny misto latinskych (vypadaji stejne) v peti textech,
+  mimo jine v napovede pod polem "Okno od" ranniho odkladu.
+
+## 0.9.017 – 2026-10-06
+
+- **Oprava: cerstva instalace prvni levnou noc nabila baterii ze site na 100 %.** U zakaznika
+  32 kWh mezi 01:00 a ~04:00, prvni noc po nasazeni. Pri prvnim spusteni neexistoval zaznam
+  o poslednim plnem nabiti; flow to bralo jako "pred 9999 dny", kalibraci chtelo okamzite a ta ma
+  nejvyssi prioritu (bezi i v Manualu). Ted se 14denni lhuta na nove instalaci zacne pocitat od
+  dneska - za tu dobu se baterie obvykle nabije sama z FVE.
+  Instalace nasazene starsi verzi, ktere maji v `calibration-state.json` prazdne datum, se po
+  aktualizaci srovnaji stejne (lhuta od dne aktualizace, s hlaskou v logu).
+- **Oprava: kalibrace se mohla opakovat kazdou levnou noc.** Nabijeni se zastavilo na 99 %, ale
+  datum plneho nabiti se zapsalo az na 99,5 %. Baterie hlasici SOC v celych procentech, ktera
+  zustala na 99, kalibraci ukoncila, ale zaznam nevznikl. Ted je jeden prah pro oboji (99,5 %,
+  konstanta `CAL_FULL_SOC`) - kalibrace nabiji, dokud BMS nenahlasi 100 %.
+- Kalibrace se nespusti, dokud neni nacteny stav ze souboru ani dokud neprisel SOC z Victronu.
+  Drive se oba stavy cetly jako "nikdy nebyla plna".
+- **Stav kalibrace na Prehledu** (radek "Kalibrace baterie"): kdy byla baterie naposledy na
+  100 % a kdy nejpozdeji pobezi dalsi kalibrace; pri kalibraci "probiha" nebo "ceka na levny
+  tarif". Drive byl videt jen ve statusu uzlu v editoru.
+
+## 0.9.016 – 2026-09-23
+
+- **Jeden flow.json pro vsechny instalace - pred nasazenim se nic negeneruje.** Udaje, ktere se
+  lisi instalaci od instalace, se zadavaji v dashboardu na strance Konfigurace -> Udaje o instalaci:
+  nazev, VRM Portal ID, kapacita baterie, vykon FVE, zemepisna sirka a delka. U Shelly pribyla
+  pripojovaci pole: IP adresa (lokalni), device ID, auth key a server URI (cloud).
+  V `config/defaults.json` ve `static` zustalo jen to, co je stejne pro vsechny: URL spotovych
+  cen, adresa heartbeatu a limit kalibrace.
+- **Nasazene instalace si udaje vezmou samy.** Starsi verze ukladaly do `config-state.json` cely
+  config vcetne staticke casti, takze nazev, vrmId, baterie, kWp a souradnice uz v souboru na GX
+  jsou a po importu noveho flow se nactou. Nepreneslo by se jen pripojeni Shelly (to v souboru
+  nebylo), ale Shelly zatim nikde nastavene neni.
+- Pri nacteni se ze souboru odstrani zastarale kopie statickych hodnot (`spotPriceApi`,
+  `batteryCalibration`, `vebusInstance`) a soubor se hned prepise v novem tvaru. Prvky poli Shelly
+  se doplni o nove klice z defaultu.
+- **vrmId se doplni samo**, jakmile ho flow zachyti z MQTT tematu - ale jen kdyz je pole prazdne;
+  rucne zadane ID se nikdy neprepisuje. Samo se to chytne jen tehdy, kdyz keepalive posle nekdo
+  jiny (displej GX, Remote Console, VRM), proto zustava i rucni pole.
+- Keepalive posila plny dotaz pri prvnim pouziti kazdeho ID, ne jen po startu. Bez toho by po
+  dodatecnem vyplneni vrmId prisly jen menici se hodnoty.
+- Hlidac formatu (`d_install_guard`): vrmId 12 znaku 0-9 a-f, souradnice v rozsahu, IP bez
+  `http://`, server URI jen https. Neplatna hodnota se neulozi a v radku "Kontrola udaju" se
+  objevi proc. Po zmene souradnic se predpoved stahne hned, ne az v 05:00 nebo 20:00.
+- Radek "Kontrola udaju" ukazuje, co jeste chybi.
+- Predpoved pocasi bez souradnic se nestahuje. Drive byl zalozni bod v Praze, ktery u instalace
+  bez souradnic daval verohodne vypadajici predpoved z jineho mista.
+- Nazev instalace je na Prehledu prvnim radkem skupiny misto v nadpisu - nadpis skupiny
+  Dashboard 2.0 za behu zmenit neumi.
+- Chybejici VRM Portal ID uz nezapisuje kazdych 15-30 s chybu do logu: keepalive varuje jednou,
+  vystupni uzly jen zcervenaji.
+- Heartbeat bere nazev, baterii a kWp z dynamickeho configu a jako ID pouziva portal ID z MQTT;
+  bez ID se neposila.
+- Dokumentace: opravena zastarala mista. Test rele v INSTALACE odkazoval na zruseny formular
+  "Manualni override" (nove Rezim: Trvale zapnuto). Na trech mistech (INSTALACE, README) stalo, ze
+  "Feed-in excess DC-coupled PV" se musi zapnout rucne v GX, resp. ze ho flow nikdy nenastavuje -
+  od 0.9.013 ho flow prepina samo.
+
+## 0.9.015 – 2026-09-23
+
+- **Heartbeat: instalace se sama hlasi na server** `vrm.elektrarnycerny.cz`. Duvod: dosud jsem se
+  o nefunkcni instalaci dozvedel az od zakaznika a verzi jsem zjistil jen tak, ze jsem se na tu
+  konkretni instalaci prihlasil. Flow ted 2 minuty po startu a pak kazdych 6 hodin posle POST
+  s JSON: vrmId, nazev instalace, verze, rezim auto/manual, % k obchodovani, zapnuty ranni odklad,
+  letni/zimni rezim, pretok do site (kW), zakaz vybijeni do site, SOC, duvod posledniho zasahu,
+  stav MQTT a stari poslednich dat, kapacita baterie a kWp.
+  Posila se 4x denne schvalne - server hlasi vypadek az po 3 dnech, takze nekolik zmeskanych
+  hlaseni po sobe jeste neni poplach.
+- Pri nedostupnosti serveru heartbeat **selze tise** (`senderr`), jen zezloutne status uzlu.
+  Vypadek monitoringu nesmi byt duvod, proc bude nekdo resit cervene hlasky v logu.
+- Adresa serveru je v `config/defaults.json` (`static.heartbeat.url`). **Kdyz je prazdna,
+  neposila se nic** - instalace, ktere hlasit nechci, staci nechat bez URL.
+- Verze je nove dostupna i za behu jako `global.get('version')`. Zamerne mimo `config`: config se
+  uklada do souboru a pri pristim startu by ulozena stara verze prebila novou, takze by cislo
+  zamrzlo.
+- Serverova cast (prijem, ulozeni, mail pri tichu delsim nez 3 dny, tydenni prehledova tabulka,
+  prehled v prohlizeci) je v adresari `server/` a je nasazena na serveru autora. PHP bez
+  jakychkoli zavislosti, data v JSON souboru se zamkem - na serveru nema SQLite zadna
+  z nainstalovanych PHP verzi a kvuli par desitkam radku nema smysl doinstalovavat rozsireni
+  do FPM poolu sdileneho s dalsimi weby.
+
+## 0.9.014 – 2026-09-23
+
+- Odstranena historicka poznamka o chybe palety `node-red-contrib-victron` v1.6.64 (z komentare
+  v generatoru i z instalacni poznamky ve flow). Od Venus OS 3.80 je paleta ve verzi 1.7.27, kde
+  je ta chyba davno opravena, takze uz nic nevysvetluje. Konstatovani, ze flow paletu nepouziva
+  a nema na ni zavislost, zustava - to plati dal.
+  Zmena je jen v komentarich, chovani se nemeni.
+
+## 0.9.013 – 2026-09-23
+
+- **Pri nezajmu o export se nove zakaze i pretok prebytku z DC-coupled PV**
+  (`/Settings/CGwacs/OvervoltageFeedIn` = 0), ne jen zavre strop `MaxFeedInPower`.
+  Duvod z provozu: na jedne instalaci se prodavalo pri nulove cene 2 kW, prestoze strop byl 60 W.
+  U DC-coupled PV se strop prokazatelne prekracuje - kdyz je pretok prebytku povoleny, prestane
+  platit i omezeni nabijeciho proudu z DVCC a MPPT jede na plny vykon, aby se pretok maximalizoval.
+  Regulace stropem to nestiha. Proto se ted rovnou zakaze VYROBA prebytku, misto abychom ho
+  zkouseli zadrzet limitem.
+- Rozhoduje stejny priznak jako o stropu (`exportIntended`), takze se obe hodnoty nemuzou rozejit.
+- **Pojistky proti zaseknutemu zakazu**, stejne jako u limitu nabijeciho proudu: prvni tik po
+  startu zapisuje vzdy (po padu Node-RED se pretok do 15 s zase povoli) a pri prepnuti do Manualu
+  se zakaz uvolni, ale JEN pokud ho drzel flow - cizi nastaveni neprepisujeme.
+- Ve stavovem radku na Prehledu se to hlasi pripiskem `pretok FVE zakazan`, a to jen v tom stavu,
+  kdy neco vysvetluje.
+- **Netyka se AC-coupled FVE** - ta do site posila jinou cestou a tenhle prepinac na ni nema vliv.
+
+## 0.9.012 – 2026-09-19
+
+- **"Min. cena pro prodej z baterie" presunuta do skupiny "Baterie - obchodovani a rezerva".**
+  Ridi vyber oken PLANOVACE (mechanismus B), tedy obchodovani s baterii - ve skupine "Prodej pri
+  vysoke cene (mechanismus A)" matla, protoze tam se neuplatnuje vubec. Hodnota ani klic
+  (`exportBMinPrice`) se nemeni, takze ulozene konfigurace zustavaji platne.
+
+## 0.9.011 – 2026-09-02
+
+- Z `INSTALACE.txt`, KROK 0, odstranena polozka o overeni "Feed-in excess DC-coupled PV" - bez ni
+  nefunguje instalace jako celek, takze nema smysl jako zvlastni krok k odskrtnuti. Zminka
+  v seznamu rychle diagnostiky (bod 5) zustava, tam je uzitecna.
+  Zmena je jen v dokumentaci, flow se nemeni.
+
+## 0.9.010 – 2026-09-02
+
+- **Ranni odklad (C) se v zimnim rezimu neuplatnuje.** Doted v kodu zadna sezonni podminka nebyla,
+  takze C v zime bezelo, kdyz ho mel uzivatel zapnuty. Jde ale proti smyslu zimniho rezimu:
+  v zime se baterie dobiji, aby vecer nechybela energie, takze odkladat ranni nabijeni je presne
+  naopak. Zaroven tim odpada prekryv s nocnim dobijenim (okna 05:00-11:00 a 22:00-07:00 se
+  casove protinaji). Neni to parametr - v zime nema tenhle mechanismus rozumne pouziti.
+- Na Prehledu se to hlasi jako "vypnuto - zimni rezim (odklad se v zime neuplatnuje)", aby to
+  nebylo tiche prekvapeni.
+- Z `INSTALACE.txt` odstranene polozky o DVCC a "Feed-in excess DC-coupled PV" - bez nich
+  nefunguje instalace jako celek, takze je nema smysl uvadet jako zvlastni krok.
+
+## 0.9.009 – 2026-09-02
+
+- **Mechanismus C nove pracuje s LIMITEM, ne s prikazem.** Princip je "v rannim okne se baterie
+  nenabiji ani nevybiji do site a nadvyroba jde do site". Nove se to deje tremi limity:
+  `MaxChargeCurrent` = nastavena hodnota v A (baterie se skoro nenabiji), `AcPowerSetPoint`
+  = klidova hodnota (nic se z baterie nevytlacuje), `MaxFeedInPower` = plny strop (menic posle ven,
+  co zbyde). Drive se prikazoval setpoint `-min(prebytek, strop)`, coz zaviselo na presnosti
+  a zpozdeni mereneho prebytku - kdyz vyroba klesla driv, nez se to zmerilo, prikaz uz platil
+  a rozdil se bral z baterie.
+- **Novy parametr "Max. nabijeci proud v okne (A)"** (`morningDeferral.maxChargeCurrentA`,
+  vychozi 5 A, coz je pri 48 V asi 250 W). Zapisuje se do `/Settings/SystemSetup/MaxChargeCurrent`,
+  mimo okno se uvolnuje hodnotou -1.
+- **BMS se s tim nepere.** DVCC bere MINIMUM z naseho limitu a limitu hlaseneho z BMS, takze kdyz
+  chce baterie min, plati baterie. Overeno ve zdrojaku `dvcc.py`.
+- **Pojistky proti zaseknutemu limitu:** prvni tik po startu zapisuje vzdy, takze po padu
+  Node-RED se limit do 15 s uvolni; a pri prepnuti do Manualu se uvolni take, ale JEN pokud jsme
+  ho drzeli my - cizi nastaveni DVCC neprepisujeme.
+- Podminky, KDY se C aktivuje (okno, prah SOC, cena, horni kvartil rana, pocasova brzda), se
+  nemeni - ty rozhoduji o tom, jestli rezim plati, ne co dela.
+- **PODMINKA: v GX musi byt zapnute DVCC**, jinak se limit nabijeciho proudu ignoruje.
+
+## 0.9.008 – 2026-09-02
+
+- **Oprava: vypinac "Nikdy nevybijet" pustil prebytek do site i pri ZAPORNE cene.** Kontrolu ceny
+  mel mechanismus A (`aPriceOk`); kdyz ho vypinac v 0.9.007 cely odstavil, zmizela s nim - a strop
+  `MaxFeedInPower` zustaval otevreny nepretrzite, takze by se za export platilo. Nove se strop
+  otevre jen kdyz je prodejni cena nad prahem "Min. cena pro export" (`exportPriceThreshold`),
+  tedy stejnym prahem jako u mechanismu A. Zadny novy parametr: kdo chce prodavat jen nad nulou,
+  da prah na 0.
+- Pod prahem se rezim hlasi jako `jen-prebytek-pod-prahem` a strop je zavreny.
+- Horni kvartil se tu zamerne neuplatnuje - chrani ulozenou energii pred vyprodanim v prumerne
+  hodine, jenze tady se zadna ulozena energie neprodava.
+
+## 0.9.007 – 2026-09-02
+
+- **Vypinac "Nikdy nevybijet baterii do site" nove odstavuje CELY mechanismus A**, ne jen jeho
+  hluboke vybijeni. V 0.9.006 zustavala vetev `prodej-A-plna-baterie` a merenim se ukazalo, ze
+  pri vyrobe 800 W prikazovala -4000 W a rozdil brala z baterie - vybijelo se od 100 % az na
+  94 %, nez latch pustil. Vypinac tedy nedrzel, co slibuje.
+- **Misto toho drzi otevreny strop.** Setpoint zustava na klidove hodnote a `MaxFeedInPower` se
+  otevre na plny povoleny pretok; menic si pak sam posle do site to, co vyhodnoti jako prebytek.
+  Duvod: setpoint neumi rozlisit "posli prebytek" od "vybij baterii" - rozhoduje jen jeho velikost
+  proti okamzite vyrobe. `MaxFeedInPower` to rozlisit umi, protoze je to strop, ne prikaz.
+  Podminka: v GX musi byt zapnute "Feed-in excess DC-coupled PV".
+- **Novy duvod `jen-prebytek-FVE`** ve stavovem radku na Prehledu, vcetne popisku - vlevo je
+  klidova hodnota setpointu, skutecny pretok je az za svislitkem.
+- Zmena se tyka JEN tohoto vypinace. `prodej-A-z-baterie`, `prodej-A-prebytek` i ranni odklad (C)
+  pracuji dal se setpointem, protoze ty energii ODKLANEJI z nabijeni do site - to pouhym otevrenim
+  stropu nahradit nejde.
+
+## 0.9.006 – 2026-09-02
+
+- **Novy vypinac "Nikdy nevybijet baterii do site"** (stranka Rezimy, skupina Baterie,
+  `neverDischargeToGrid`, vychozi vypnuto). Nastaveni "% k obchodovani" na nulu totiz vypne
+  JEN planovac (mechanismus B) - mechanismus A je na nem nezavisly, ridi se prahem SOC a baterii
+  vybijel dal. Konfiguraci to neslo obejit: `exportSocThreshold` na 100 sice zastavi hluboke
+  vybijeni, ale vetev "plna baterie" se ridi samostatnym prahem a projde dal.
+  Vypinac zastavi hluboke vybijeni (`aDeep`), naplanovany prodej (B) a planovac uz okna ani
+  nepocita (status hlasi "vybijeni do site zakazano").
+- **Vetev `prodej-A-plna-baterie` zustava i pri zapnutem vypinaci**, ale jen kdyz vyroba opravdu
+  bezi (`pvPowerW > 100 W`). Bez te podminky by prikaz na plny vykon znamenal ciste vybijeni
+  baterie. Se sluncem jde energie z panelu - je to tataz uvaha jako u zimniho vypinace obchodovani.
+- **Klidoveho setpointu se vypinac NETYKA.** Zaporny klidovy pretok se bere z baterie, ale je to
+  vedome nastaveni uzivatele a ma vlastni pojistku na rezervu pro domacnost.
+
+## 0.9.005 – 2026-09-02
+
+- **Oprava dokumentace: lokalni adresa Node-REDu je `https://<IP>:1881`, ne `http://<IP>:1880`.**
+  `INSTALACE.txt` uvadela port 1880 jako fakt - ten udaj pochazel ze zadani a nikdy nebyl overen.
+  Venus OS servíruje Node-RED pres HTTPS na portu 1881; holy http na 1880 ve vychozim stavu
+  neposlouchá a zapina se az rucni upravou konfiguracniho souboru (Victron FAQ Q10). Certifikat
+  je self-signed, takze prohlizec vyhodi varovani, ktere je nutne odklikat - bez toho to vypada,
+  ze adresa nefunguje vubec. Doplnena i poznamka o VRM proxy a hlasce "No session".
+  Flow samotne se nemeni, meni se jen cislo verze a dokumentace.
+
+## 0.9.004 – 2026-09-02
+
+- **Dlouhe radky na Prehledu se nove zalamuji.** Widgety `ui-text` mely `wrapText: false`, takze
+  hodnota mela ve stylech `white-space: nowrap` s `text-overflow: ellipsis` - na uzke obrazovce se
+  konec radku neusekl zalomenim, ale tremi teckami a proste zmizel. Nejvic to bylo videt na
+  telefonu u radku "Aktualni plan" a "Stav dodavky/nabijeni". Zapnuto pro vsech 31 textovych
+  radku; u kratkych hodnot se nic nemeni.
+
+## 0.9.003 – 2026-09-02
+
+- **Changelog nove nese u kazde verze datum** ve tvaru `## <verze> – <RRRR-MM-DD>`. Validace
+  kontroluje cely tvar nadpisu, ne uz jen shodu cisla s `VERSION`.
+
+## 0.9.002 – 2026-09-02
+
+- **Oprava: relativni cenove kriterium nefungovalo pri FIXNI cene.** `fveMorningPrice()` (mechanismus C)
+  porovnavala aktualni nakupni cenu s hornim kvartilem spoctenym ze SPOTOVYCH cen - jenze pri
+  `buyPriceType: "fix"` je aktualni cena konstanta (fixni cena + poplatek VT/NT). Srovnavaly se tedy
+  dve ruzne meritka a vysledek zavisel jen na tom, jak se fixni cena nahodou trefila do rozdeleni
+  spotu daneho dne. Den ode dne se to prevracelo: u zakaznika s fixni cenou 3,50 + VT 2,00 = 5,50 Kc
+  to mechanismus C zablokovalo hlaskou "cena mimo horni ctvrtinu rana", zatimco na jinem dni by
+  stejne nastaveni proslo. Pri fixni cene zadna "drazsi cast rana" neexistuje, takze se kvartil nove
+  neuplatnuje vubec a plati jen pevny prah. `fveIsCheapNow()` tuto podminku mela odjakziva, do
+  `fveMorningPrice()` se nedostala.
+- **Totez preventivne v `fveIsExpensiveNow()`** pro `sellPriceType: "fix"` - mechanismus A by mel
+  stejnou vadu, jen ji zatim nikdo netrefil.
+- **Stav mechanismu C na Prehledu** pri fixni cene nove pise "fixni cena, kvartil se neuplatnuje"
+  misto zavadejiciho poctu ctvrthodin, ktery se k uzivatelove cene nijak nevztahoval.
+
+## 0.9.001 – 2026-09-02
+
+- **Prehled: nadpis skupiny nese nazev instalace.** Misto "Stav systemu" je nove
+  "Stav systemu - <installName>" podle `config/defaults.json`, aby bylo na prvni pohled jasne,
+  ke ktere instalaci dashboard patri.
+- **Prehled: pod stavem baterie je cislo verze.** Nahradilo popisek o tom, odkud se SOC bere -
+  ten nikomu nic nerikal, kdezto verze se hodi pri hlaseni problemu. Pouziva stejny maly font,
+  protoze jde o stejny mechanismus jako u popisku widgetu.
+- **Prehled: novy radek "Aktualni plan"** hned pod stavem dodavky. Prvni radek rika, co se deje
+  prave ted; tenhle, co je naplanovano dopredu - kolik ctvrthodin jeste dnes ceka planovac prodeje,
+  kdy je nejblizsi, kolik z denniho rozpoctu uz je prodano, a v zime totez pro nocni nabijeni.
+- **Oprava: plan prodeje se po restartu pocital az za 5 minut.** `eb_tick` nemel `once` (na rozdil
+  od `nb_tick`), takze `exportBPlan` zustal po restartu Node-RED prazdny a `ex_decide` do prvniho
+  tiku nenasel zadne okno - mechanismus B tedy 5 minut nefungoval. Nove se plan spocita 15 s po
+  startu. Vsimlo se toho az pri psani radku "Aktualni plan", ktery po restartu hlasil "dnes uz
+  zadne okno"; ten nove rozlisuje "plan se jeste nepocital".
+- **Novy `CHANGELOG.txt` a verzovani.** Vcetne kontroly ve validaci, ktera hlida, ze kazde
+  zvyseni `VERSION` ma tady odpovidajici zaznam.
+
+
+## 0.9 – 2026-09-02 – vychozi stav teto rady
+
+Souhrn toho, co 0.9 prinesla proti 0.85. Poradi odpovida tomu, jak veci vznikaly.
+
+### Opravy chyb
+
+- **Zimni pojistky mechanismu A nefungovaly.** V `ex_decide` se `winterNoTrade`
+  a `nightChargeNeeded` pouzivaly v resetu latche `aDeep` driv, nez byly deklarovane. `var` se
+  vyhoistuje, takze kod nespadl, ale obe podminky mely v tu chvili hodnotu `undefined` - a nikdy
+  se neuplatnily. V zime pri vypnutem obchodovani i v zimni noci pod cilovym SOC se tedy baterie
+  dal vybijela plnym vykonem, jakmile cena spadla do horniho kvartilu.
+- **Planovac prodeje bral i zitrejsi okna.** Kdyz byl zitrejsi vecer drazsi nez dnesni, vybral
+  vsechna okna ze zitrka a dnesek se neprodal vubec - a protoze se rozpocet o pulnoci nuluje,
+  dnesni objem uz nikdo nedohnal. Zitrek se nove neplanuje vubec.
+- **Neuplny casovy udaj delal z okna okno pres pulnoc.** Ulozene `"6"` (bez minut) se parsovalo
+  na `NaN`, porovnani `f <= tt` je s NaN vzdy nepravdive - a tise se pouzila vetev "pres pulnoc".
+  Z okna 6:00-10:00 se stalo 00:00-10:00. Novy parser `fveToMin()` je tolerantni a neplatny udaj
+  prizna misto toho, aby ho preznacil.
+- **Sipky u ciselnych poli neukladaly.** `ui-number-input` ma +/- jako samostatna tlacitka vedle
+  pole, takze se pole nezaostri a `@blur` nikdy nenastane; jedina cesta je `onChange`, ktery
+  posila pouze pri `sendOnDelay`. Zapnuto pro vsech 28 ciselnych poli (`delay: 800`).
+
+### Nove funkce
+
+- **Mechanismus C ma relativni cenove kriterium.** Pevny prah zustal podlahou, k tomu musi byt
+  cena v horni ctvrtine cen ranniho okna (`fveMorningPrice()`).
+- **Mechanismus C ma pocasovou brzdu.** Kdyz je predpovezeny index jasnosti na dnesek pod prahem
+  ze soupatka, odklad se vypne. 0 % = pocasi se neresi (vychozi).
+- **Predpoved se stahuje dvakrat denne** (05:00 a 20:00) a pocita se pro oba dny vcetne indexu
+  jasnosti (`shortwave_radiation` / `terrestrial_radiation`).
+- **Prehled: nove poradi a dva nove radky.** "Stav dodavky/nabijeni" hned pod stavem baterie, pod
+  nim "Predpoved vyroby" a "Ranni odklad nabijeni" s nastavenym prahem jasnosti v nadpisu.
+
+### Zmeny ovladani
+
+- **Formulare zrusene.** Vsechny ovladaci prvky jsou samostatne widgety, ktere ukladaji okamzite -
+  tlacitka Ulozit a Zrusit zmizela. Duvod: `ui-form` mazal pole pri kazdem otevreni stranky
+  a za nedotcene zaskrtavatko posilal vzdy `false`.
+- **Jeden vyber rezimu misto trojice prepinacu.** Rele a Shelly maji `mode` = `off` / `auto` / `on`
+  misto kombinace `enabled` + `manualOverride`.
+- **Kazde rele a Shelly ma volny textovy nazev**, kam si uzivatel napise, co je pripojeno.
+- **Pole "priorita" u rele odstraneno** - byl to jen informativni udaj, ktery nic neridil.
+- **Treti lokalni Shelly zrusen**, zbyla dve. Pocty zarizeni jsou nove jediny zdroj pravdy.
+- **Popisky pod radky "Aktualni stavy" a pod stavem baterie odstranene** jako nadbytecne.
+
+### Migrace ulozene konfigurace
+
+Vse probehne samo pri prvnim startu a napise se do logu:
+
+- casove udaje se srovnaji do tvaru `HH:MM` (`"6"` -> `"06:00"`),
+- `enabled` + `manualOverride` se prevedou na `mode`,
+- pole zarizeni se useknou na aktualni pocet.
