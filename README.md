@@ -39,7 +39,10 @@ optional read-only mobile app.
 
 ## Installation (short)
 
-1. In Node-RED: *Menu → Import* → select [`flow.json`](flow.json) → *Deploy*.
+Two editions with identical logic: [`flow-en.json`](flow-en.json) – **English dashboard**,
+[`flow.json`](flow.json) – Czech dashboard.
+
+1. In Node-RED: *Menu → Import* → select `flow-en.json` (or `flow.json`) → *Deploy*.
 2. Open the dashboard (`https://<gx-address>:1881/dashboard`) → **Configuration** and fill in
    the VRM Portal ID, battery capacity, PV size, coordinates and grid feed-in limit.
 3. Set tariffs/fees on **Tariffs and prices**, keep **Modes** on *Manual* until you have checked
@@ -48,8 +51,9 @@ optional read-only mobile app.
 When updating to a new version, delete the flow's tabs in Node-RED first (Cmd/Ctrl-click all
 tabs → Delete), then import the new `flow.json`. Settings are kept on the GX.
 
-Detailed documentation (Czech): [cs/INSTALACE.txt](cs/INSTALACE.txt) (installation checklist),
-[cs/DOKUMENTACE.txt](cs/DOKUMENTACE.txt) (how it works), [cs/CHANGELOG.txt](cs/CHANGELOG.txt).
+**English user guide: [en/README.txt](en/README.txt)**, changes: [en/CHANGELOG.txt](en/CHANGELOG.txt).
+Detailed technical documentation in Czech: [cs/INSTALACE.txt](cs/INSTALACE.txt) (installation
+checklist), [cs/DOKUMENTACE.txt](cs/DOKUMENTACE.txt) (how it works), [cs/CHANGELOG.txt](cs/CHANGELOG.txt).
 
 ## Data sent to the author's server
 
@@ -113,6 +117,7 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 
 ### Instalace
 
+Česká verze dashboardu je `flow.json`, anglická `flow-en.json` (logika je stejná).
 Postup krok za krokem je v [cs/INSTALACE.txt](cs/INSTALACE.txt), podrobný popis fungování
 v [cs/DOKUMENTACE.txt](cs/DOKUMENTACE.txt) a historie změn v [cs/CHANGELOG.txt](cs/CHANGELOG.txt).
 Při aktualizaci nejdřív v Node-RED smažte záložky flow (Cmd/Ctrl + klik na všechny → Delete)

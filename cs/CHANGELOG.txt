@@ -13,6 +13,19 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.054 – 2026-10-25
+
+- **Anglicka varianta flow** (verejna/flow-en.json, na GitHubu flow-en.json): vsechny texty
+  dashboardu, napovedy, stavove hlasky a plan anglicky; logika stejna jako v ceske verzi.
+  Preklady jsou v i18n/en.json, preklada scripts/i18n.py. Sestaveni selze, kdyz nejaky viditelny
+  text nema preklad (prehled v i18n/_chybi.json), kdyz po prekladu neprojde syntaxe kodu, nebo
+  kdyz anglicky changelog (en/CHANGELOG.txt) nema zaznam pro verzi. Anglicka uzivatelska
+  prirucka je v en/README.txt (stranka README v anglickem dashboardu).
+- Kody duvodu regulace (nabijeni-ze-site...) se v anglicke variante zobrazuji anglicky
+  (grid-charging...) - prevod jen pri zobrazeni (fveKody), v logice zustavaji ceske.
+- Oprava: kalibrace pocita dny od posledniho plneho nabiti podle kalendarniho data. V den zmeny
+  casu (25 hodin) se vecer "9. den" pocital jako 10. a kalibrace ze slunce mohla zacit o den driv.
+
 ## 0.9.053 – 2026-10-25
 
 - **Verejna varianta pro GitHub:** generator vedle flow.json vytvari i verejna/flow.json - stejne

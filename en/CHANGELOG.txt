@@ -1,0 +1,13 @@
+# Changelog – Victron ESS Node-RED Manager (English edition)
+
+Newest entry first. The English edition starts at 0.9.054; the full history of earlier versions
+is in Czech (cs/CHANGELOG.txt in the repository).
+
+
+## 0.9.054 – 2026-10-25
+
+- First English edition of the flow (flow-en.json): all dashboard texts, help texts, status and
+  plan messages in English; regulation logic identical to the Czech edition.
+- English user guide (README page in the dashboard).
+- Calibration counts days by calendar date (a 25-hour day at the end of daylight saving time no
+  longer counts as an extra day).

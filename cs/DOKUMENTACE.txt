@@ -287,6 +287,30 @@ zvlast. Kdo hlaseni nechce, vypne v Node-RED uzly "POST heartbeat" a "POST zive 
 (tab Statistika) - mobilni aplikace pak nefunguje, regulace bezi dal beze zmeny.
 
 
+### Zmena 16: anglicka varianta flow (0.9.054)
+
+`verejna/flow-en.json` (na GitHubu `flow-en.json`) je verejna varianta s anglickym dashboardem.
+Generator ji sklada az z hotovych uzlu - zdrojovy kod zustava cesky:
+
+- `scripts/i18n.py` najde viditelne texty (nazvy stranek a skupin, popisky, volby, vyrazy u ui-text,
+  texty a retezce v sablonach, retezce ve funkcich - maly tokenizer JS, ktery preskakuje komentare)
+  a prelozi je podle `i18n/en.json` ({cesky: anglicky}). Technicke retezce, ktere heuristika chytne
+  zbytecne (MQTT cesty, kody), jsou v `_ignorovat`; co slovnikem nejde (slovosled "pred 2 dny" ->
+  "2 days ago", klice tabulek, zkratka FVE), resi `_nahrady` = presne nahrady v kodu uzlu.
+- Kody duvodu regulace (`nabijeni-ze-site`...) se v logice porovnavaji, takze se neprekladaji;
+  pri zobrazeni je prevadi `fveKody()` (tabulka FVE_KODY je v ceske variante prazdna).
+- Pojistky: sestaveni selze, kdyz nejaky viditelny text nema preklad (seznam v
+  `i18n/_chybi.json`), kdyz `_nahrady` nesedi na kod, kdyz po prekladu neprojde syntaxe nektere
+  funkce nebo skriptu sablony (Node.js), nebo kdyz `en/CHANGELOG.txt` nema zaznam pro VERSION.
+- Stranky README/Changelog v anglickem dashboardu ukazuji `en/README.txt` (uzivatelska
+  prirucka) a `en/CHANGELOG.txt`. Podrobna technicka dokumentace je jen cesky.
+- Overeno: regresni testy proti funkcim z flow-en.json - logika shodna (padaji jen kontroly
+  ceskych textu); vsechny stranky v realnem Dashboard 1.33.
+
+**Pri kazde zmene textu v dashboardu** je tedy potreba doplnit preklad do `i18n/en.json`
+a pri kazde verzi zaznam do `en/CHANGELOG.txt` - jinak se flow nesestavi.
+
+
 ### Zmena 15: energie dnes z pocitadel Victronu (0.9.049)
 
 Tabulka na Prehledu (Dodano do site / Odebrano ze site / Vyroba FVE dnes) bere udaje z pocitadel
