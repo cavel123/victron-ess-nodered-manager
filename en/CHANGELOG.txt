@@ -4,6 +4,16 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.057 – 2026-10-26
+
+- Support the app: PayPal as a QR code and a "Pay with PayPal" button instead of the e-mail.
+
+## 0.9.056 – 2026-10-26
+
+- Dashboard top bar: the Venus OS version is shown under the flow version. It is also sent in the
+  heartbeat.
+- Support the app: IBAN (with a Copy button) and PayPal added.
+
 ## 0.9.055 – 2026-10-26
 
 - Overview: "Current plan" split into two rows - "Battery selling plan" and "Grid charging plan",

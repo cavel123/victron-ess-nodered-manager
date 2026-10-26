@@ -13,6 +13,16 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.057 – 2026-10-26
+
+- Podporte aplikaci: PayPal misto e-mailu jako QR kod a tlacitko "Zaplatit pres PayPal".
+
+## 0.9.056 – 2026-10-26
+
+- Horni lista dashboardu: pod verzi flow i verze Venus OS (z MQTT, platform/0/Firmware/Installed/
+  Version). Verze Venus OS se posila i v heartbeatu a je videt v prehledu instalaci na serveru.
+- Podporte aplikaci: pribyl IBAN s tlacitkem Kopirovat a PayPal.
+
 ## 0.9.055 – 2026-10-26
 
 - Prehled: "Aktualni plan" rozdelen na dva radky - "Plan prodeje z baterie" a "Plan nabijeni ze

@@ -74,10 +74,12 @@ including modifications. **Commercial use** (e.g. installing it for paying custo
 ## Support the development
 
 If the flow is useful to you, a contribution of any amount is welcome: account
-**3534348005/5500** (Czech bank account), or scan the QR payment code below.
+**3534348005/5500** (Czech bank account), IBAN **CZ26 5500 0000 0035 3434 8005**,
+**[PayPal](https://www.paypal.com/qrcodes/managed/ebc7c6c8-0067-429e-bb78-8c7c0cae69cd)**, or scan one of the QR codes below (left: Czech banking apps, right:
+PayPal).
 Ideas and bug reports: pavel@elektrarnycerny.cz.
 
-<img src="qr-platba.png" alt="QR payment" width="180">
+<img src="qr-platba.png" alt="QR payment" width="180"> &nbsp; <a href="https://www.paypal.com/qrcodes/managed/ebc7c6c8-0067-429e-bb78-8c7c0cae69cd"><img src="qr-paypal.png" alt="PayPal" width="180"></a>
 
 ---
 
@@ -140,5 +142,5 @@ pavel@elektrarnycerny.cz.
 
 ### Podpořte vývoj
 
-Pokud vám flow slouží, budu rád za příspěvek libovolné částky na účet **3534348005/5500** nebo
-přes QR platbu výše. Nápady a chyby: pavel@elektrarnycerny.cz.
+Pokud vám flow slouží, budu rád za příspěvek libovolné částky na účet **3534348005/5500**, přes
+**[PayPal](https://www.paypal.com/qrcodes/managed/ebc7c6c8-0067-429e-bb78-8c7c0cae69cd)** nebo přes QR kódy výše (vlevo bankovní, vpravo PayPal). Nápady a chyby: pavel@elektrarnycerny.cz.
