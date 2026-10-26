@@ -13,6 +13,11 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.062 – 2026-10-26
+
+- Mobilni aplikace: radek s dnesni energii jako na Prehledu dashboardu - dodano do site, odebrano
+  ze site a vyroba FVE (kWh z pocitadel Victron).
+
 ## 0.9.061 – 2026-10-26
 
 - Anglicka varianta: dopreklad zbylych ceskych slov v planu nabijeni ("nutne", "levne", "od") a ve

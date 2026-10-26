@@ -4,6 +4,11 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.062 – 2026-10-26
+
+- Mobile app: a row with today's energy as on the dashboard Overview - exported to the grid,
+  imported from the grid and PV production (kWh from the Victron counters).
+
 ## 0.9.061 – 2026-10-26
 
 - English edition: remaining Czech words translated in the grid charging plan ("minimum", "cheap",
