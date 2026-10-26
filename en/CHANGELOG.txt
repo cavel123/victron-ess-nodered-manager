@@ -4,6 +4,16 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.058 – 2026-10-26
+
+- Spot prices for other European markets: new "Market (zone)" selection on the Tariffs and prices
+  page. CZ is unchanged (spotovaelektrina.cz, OTE backup, CZK). Other zones (DE-LU, AT, PL, SK, HU,
+  NL, BE, FR, IT, Nordic, Baltic...) take prices in EUR from Energy-Charts.
+- Local time follows the zone (windows, tariffs, price quarter-hours, Open-Meteo forecast),
+  including daylight saving time.
+- When the currency changes (CZK <-> EUR), the price settings are converted at 25 CZK/EUR.
+- The heartbeat also reports the market zone.
+
 ## 0.9.057 – 2026-10-26
 
 - Support the app: PayPal as a QR code and a "Pay with PayPal" button instead of the e-mail.

@@ -33,8 +33,9 @@ PolyForm Noncommercial License 1.0.0; commercial use by agreement: pavel@elektra
   - Target SOC (winter) - only in quarter-hours below a price cap, reduced by the PV forecast.
   - Charging to 100 % at a negative final buy price.
 - Summer and winter profiles - each season has its own settings; switching by date or manually.
-- Prices: 15-minute spot prices (spotovaelektrina.cz, backup source OTE converted with the ČNB
-  EUR rate), fixed prices as an option and as a fallback, distribution tariff HT/LT with a weekly
+- Prices: 15-minute spot prices of the selected market zone - Czechia (spotovaelektrina.cz, backup
+  source OTE converted with the ČNB EUR rate, CZK) or another European day-ahead zone (Energy-Charts,
+  EUR); the local time of the whole flow follows the zone, fixed prices as an option and as a fallback, distribution tariff HT/LT with a weekly
   schedule and buy/sell fees.
 - Battery SOC calibration: the battery is regularly charged to 100 % - preferably from the sun;
   after the interval selling stops and the battery is topped up from the grid in the afternoon
@@ -74,7 +75,9 @@ PolyForm Noncommercial License 1.0.0; commercial use by agreement: pavel@elektra
    coordinates (for the weather forecast), nominal max. grid feed-in and max. charging power from
    the grid. The "Details check" row shows what is still missing.
 6. Overview -> "Connection to Victron (MQTT)" should show "OK" within about 15 s.
-7. "Tariffs and prices": spot or fixed buy/sell price, buy fees HT/LT, selling fee, weekly
+7. "Tariffs and prices": first the market (zone) - prices, currency and local time follow it; when
+   the currency changes, the price settings are converted at 25 CZK/EUR, so check them. Then spot or
+   fixed buy/sell price, buy fees HT/LT, selling fee, weekly
    low-tariff schedule.
 8. "Modes": leave "Operating mode" on Manual until you have checked everything. In Manual the
    flow calculates and shows its recommendation ("MANUAL, recommended: ...") but writes nothing

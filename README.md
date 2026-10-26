@@ -3,7 +3,8 @@
 **English** · [Česky](#česky)
 
 A Node-RED flow for **Victron GX devices (Cerbo GX, Ekrano…) with ESS** that manages a
-PV + battery system against **Czech spot electricity prices**: it sells to the grid when it pays
+PV + battery system against **spot electricity prices** (Czech market and other European
+day-ahead zones): it sells to the grid when it pays
 off, charges from the grid when it is cheap, protects against high grid voltage, switches relays
 and Shelly devices, calibrates the battery SOC – all configured from a web dashboard, with an
 optional read-only mobile app.
@@ -19,8 +20,10 @@ optional read-only mobile app.
 - **Charging from the grid** – a *minimum SOC* guaranteed by a set time, a *target SOC* only
   when the price is below a cap (reduced by the PV forecast), and charging at negative prices.
 - **Summer / winter profiles** – each season has its own settings; switching by date or manually.
-- **Spot prices** every 15 minutes (spotovaelektrina.cz, fallback OTE + ČNB rate), distribution
-  tariff (high/low) schedule, buy/sell fees.
+- **Spot prices** every 15 minutes – Czech market (spotovaelektrina.cz, fallback OTE + ČNB rate,
+  CZK) or another European zone (Germany, Austria, Poland, Slovakia, Hungary, Netherlands, Belgium,
+  France, Italy, Nordic and Baltic countries… – EUR, from [Energy-Charts](https://energy-charts.info)),
+  local time follows the zone; distribution tariff (high/low) schedule, buy/sell fees.
 - **Battery SOC calibration** – a calibration day when the battery reaches 100 % from the sun
   with a small top-up from the grid in the afternoon, instead of charging a half-empty battery
   at night.
@@ -45,7 +48,8 @@ Two editions with identical logic: [`flow-en.json`](flow-en.json) – **English 
 1. In Node-RED: *Menu → Import* → select `flow-en.json` (or `flow.json`) → *Deploy*.
 2. Open the dashboard (`https://<gx-address>:1881/dashboard`) → **Configuration** and fill in
    the VRM Portal ID, battery capacity, PV size, coordinates and grid feed-in limit.
-3. Set tariffs/fees on **Tariffs and prices**, keep **Modes** on *Manual* until you have checked
+3. On **Tariffs and prices** choose your **market (zone)** first (prices, currency and local time
+   follow it), then set tariffs/fees, keep **Modes** on *Manual* until you have checked
    everything, then switch to automatic.
 
 When updating to a new version, delete the flow's tabs in Node-RED first (Cmd/Ctrl-click all
@@ -100,8 +104,8 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 - **Nabíjení ze sítě** – *nutné SOC* do nastaveného času, *cílové SOC* jen pod cenovým stropem
   (snížené podle předpovědi FVE), nabíjení při záporné ceně.
 - **Letní a zimní profil** – každé období má vlastní nastavení; přepínání podle data nebo ručně.
-- **Spotové ceny** po 15 minutách (spotovaelektrina.cz, záloha OTE + kurz ČNB), rozvrh
-  distribučního tarifu VT/NT, poplatky.
+- **Spotové ceny** po 15 minutách – český trh (spotovaelektrina.cz, záloha OTE + kurz ČNB) nebo
+  jiná evropská zóna v EUR z Energy-Charts; rozvrh distribučního tarifu VT/NT, poplatky.
 - **Kalibrace SOC baterie** – kalibrační den, kdy se baterie nabije ze slunce a odpoledne se ze
   sítě jen dorovná, místo nabíjení poloprázdné baterie v noci.
 - **Napěťová ochrana** – postupné omezování přetoku při vysokém napětí fází.

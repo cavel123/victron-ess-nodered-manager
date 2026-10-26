@@ -13,6 +13,16 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.058 – 2026-10-26
+
+- Spotove ceny i pro dalsi evropske trhy: na strance Tarify a ceny novy vyber "Trh (zona)".
+  CZ zustava beze zmeny (spotovaelektrina.cz, zaloha OTE, Kc). Ostatni zony (DE-LU, AT, PL, SK,
+  HU, NL, BE, FR, IT, severske, pobaltske...) berou ceny v EUR z Energy-Charts.
+- Mistni cas podle zony (okna, tarify, ctvrthodiny cen, predpoved Open-Meteo) - prevod vcetne
+  letniho casu dela Node.js podle nazvu pasma.
+- Pri zmene meny (Kc <-> EUR) se cenova nastaveni prepocitaji kurzem 25 Kc/EUR.
+- Heartbeat posila i zonu trhu.
+
 ## 0.9.057 – 2026-10-26
 
 - Podporte aplikaci: PayPal misto e-mailu jako QR kod a tlacitko "Zaplatit pres PayPal".
