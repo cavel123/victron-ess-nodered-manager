@@ -4,6 +4,13 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.055 – 2026-10-26
+
+- Overview: "Current plan" split into two rows - "Battery selling plan" and "Grid charging plan",
+  each with its own help. The mobile app shows the plan on two lines as well.
+- Mobile app in English: the language follows the flow edition (English flow = English app), before
+  the first data arrive the phone language. The support page now also shows the IBAN.
+
 ## 0.9.054 – 2026-10-25
 
 - First English edition of the flow (flow-en.json): all dashboard texts, help texts, status and

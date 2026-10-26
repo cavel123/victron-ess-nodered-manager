@@ -89,8 +89,8 @@ export.
 
 Overview
   Battery (SOC, power, calibration state), energy flow (PV, consumption, surplus, grid), today's
-  energy (exported, imported, PV production - from the Victron counters, same as VRM), current
-  plan (selling windows, grid charging), regulation state, prices, tariff, forecast, morning
+  energy (exported, imported, PV production - from the Victron counters, same as VRM), battery
+  selling plan and grid charging plan (two rows), regulation state, prices, tariff, forecast, morning
   deferral and connection state. Every row has a help text under the (i) icon.
 
 Installation setup
@@ -178,7 +178,8 @@ regulation is not affected.
 Installation setup -> Mobile app shows a QR code within 2 minutes after the VRM Portal ID is
 filled in (the installation needs internet). Scan it with the phone, open the link and choose
 "Add to Home Screen". The app only displays data. A new key can be generated at any time; it
-invalidates all paired phones. The app itself is in Czech.
+invalidates all paired phones. The app is in English when the flow is the English
+edition (before the first data arrive it follows the phone language).
 
 
 ## 10. License and support
