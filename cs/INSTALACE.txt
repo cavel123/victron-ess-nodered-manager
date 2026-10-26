@@ -111,12 +111,12 @@ Pod každým prvkem je malým písmem popis, co dělá – projdi si je, ušetř
 - [ ] **Přehled** – ukazuje SOC, výkon FVE, spotřebu, ceny (může chvíli trvat, než dotečou první
       hodnoty ze spot-price API a Victron sběrnice)
 - [ ] **Konfigurace instalace** – zkontroluj, že sedí statické údaje z kroku 3
-- [ ] **Konfigurace → Kalibrace SOC baterie** – interval (výchozí 14 dní) a „Dobít ze sítě nejpozději
-      v" (výchozí 13:00). V kalibrační den se z baterie neprodává a odpoledne se dobije do 100 %
+- [ ] **Konfigurace → Kalibrace baterie** – „Kalibrovat každých (dní)" (výchozí 14) a „Dobít na 100 %
+      do" (výchozí 13:00). V kalibrační den se z baterie neprodává a odpoledne se dobije do 100 %
       bez ohledu na cenu; jak to celé funguje, je v nápovědě ⓘ u skupiny.
 - [ ] **Tarify a ceny** – nastav tarifní okna (pokud se liší od výchozích Po–Pá 01–07 a 12–15),
-      typ nákup/prodej fix/spot, případně fixní ceny. Hlavně vyplň **„Poplatky k nákupu"**
-      **„Poplatek nákup VT"**, **„Poplatek nákup NT"** a **„Poplatek z prodeje"** (Kč/kWh) –
+      typ nákup/prodej fix/spot, případně fixní ceny. Hlavně vyplň **„Poplatky VT"**,
+      **„Poplatky NT"** a **„Poplatek z prodeje"** (Kč/kWh) –
       spot je jen burzovní cena, k nákupu se přičítá distribuce a daň, z prodeje si výkupce
       strhává poplatek. Bez nich regulace počítá s hrubým spotem. Nákupní poplatek se liší
       podle distribučního tarifu, který určuje týdenní rozvrh nízkého tarifu níže na téže
@@ -124,39 +124,38 @@ Pod každým prvkem je malým písmem popis, co dělá – projdi si je, ušetř
       v roli zálohy při výpadku spotových dat) – „fixní cena" je cena komodity, ne koncová
       cena. Když už nějakou složku obsahuje, dej příslušný poplatek na nulu.
 - [ ] **Režimy** – nech **„Režim provozu"** na **Manual**, dokud vše neověříš (viz krok 7), pak
-      zvol automatiku. V Manualu je na stránce vidět jen blok **„Ruční nastavení exportu do/odběru
-      ze sítě"**; ostatní nastavení se ukážou po přepnutí na automatiku.
+      zvol automatiku. V Manualu je na stránce vidět jen blok **„Ruční řízení"**; ostatní nastavení se ukážou po přepnutí na automatiku.
       Blok **„Režim provozu"**:
       - **„Automaticky – léto/zima podle data"** – přepíná se samo podle rozsahu **„Zima od/do"**
         (např. 11-15 až 02-28), zákazník to pak nemusí řešit. **„Automaticky – letní / zimní
         režim"** drží zvolené období napevno. Řádek **„Právě platí"** ukazuje skutečně aktivní období.
-      - **„Klidový setpoint LÉTO / ZIMA"** – hodnota držená, když nezasahuje žádný mechanismus.
+      - **„Držet na elektroměru LÉTO / ZIMA"** (klidový setpoint) – hodnota držená, když nezasahuje žádný mechanismus.
         0 = nula na elektroměru; záporná (např. −50 W) drží slabý přetok a vyloučí odběr ze sítě
         při krátkých špičkách. V zimě se hodí menší přetok (např. −10 W).
       - **„Zobrazit / upravit nastavení pro"** – léto a zima mají každé vlastní nastavení
         a na stránce je vidět vždy jen jedno (výchozí = právě platné). Projdi **obě**.
       Bloky profilu (LÉTO i ZIMA zvlášť):
-      - **„Min. prodejní cena pro export"** – spodní hranice pro jakýkoli prodej. Pro vybíjení
+      - **„Min. prodejní cena při nadbytku"** – spodní hranice pro jakýkoli prodej. Pro vybíjení
         baterie musí cena navíc patřit do nejdražší čtvrtiny dne.
-      - **„Plná baterie od (%)"** – nad touto hranicí se pošle plný výkon do sítě, jinak by FVE
+      - **„Baterie je plná od (%, doporučeno 97)"** – nad touto hranicí se pošle plný výkon do sítě, jinak by FVE
         při plné baterii zůstala uškrcená na spotřebu domu. Výchozí 97 %.
       - **„Nikdy nevybíjet baterii do sítě"** – z baterie se neprodává vůbec, do sítě jde jen
         skutečný přebytek výroby. Hodí se typicky v zimním profilu, když se topí elektřinou.
-      - **„% rezervováno pro domácnost"** – pod tuto hranici žádný prodej z baterie nesáhne.
-      - **„Prodej do sítě při baterii od nastavených % SOC"** (mechanismus A) – zároveň spouštěcí
+      - **„Rezerva baterie jen pro dům"** – pod tuto hranici žádný prodej z baterie nesáhne.
+      - **„Když je baterie plná na %, pak začni prodávat"** (mechanismus A) – zároveň spouštěcí
         podmínka i dno, pod které tento prodej nesáhne.
-      - **„% kapacity k obchodování"** a **„Min. cena pro prodej z baterie"** (mechanismus B) –
+      - **„Kolik % kapacity baterie budu obchodovat"** a **„Min. prodejní cena z baterie"** (mechanismus B) –
         denní objem plánovaného prodeje a jeho cenové dno.
-      - **Nabíjení ze sítě**: **„Nutné % SOC"** se do svého času nabije vždy, i dráž, a je zároveň
+      - **Nabíjení ze sítě**: **„Vždy nabít ze sítě aspoň na"** se do svého času nabije vždy, i dráž, a je zároveň
         dnem pro prodej (0 = vypnuto; v létě výchozí 0). **„Při záporné ceně nabít na 100 %"**
-        platí pro koncovou cenu včetně poplatků. Jen v zimě navíc **„Cílové % SOC při nízké ceně"**
-        s časem a **„Max. cenou"** (0 = bez stropu) – snižuje se podle předpovědi FVE. Kdy se bude
+        platí pro koncovou cenu včetně poplatků. Jen v zimě navíc **„Když je levno, nabít ze sítě na"**
+        s časem a cenou **„Levno = nákup nejvýš za"** (0 = bez stropu) – snižuje se podle předpovědi FVE. Kdy se bude
         nabíjet, je vidět na Přehledu v řádku „Aktuální plán".
       - **Ranní odklad (C)** je jen v letním profilu (v zimě se neuplatňuje).
 - [ ] **Rele a Shelly** – nastav prahy pro obě relé, u Shelly zapni jen ta zařízení, která
       skutečně existují (`enabled`)
 - [ ] **Napětí a ochrana** – zkontroluj, že se táhnou reálná napětí fází. Je tu i přepínač
-      **„Napěťová ochrana aktivní"** – nech zapnutý (je to bezpečnostní funkce). Při vypnutí
+      **„Ochrana před přepětím zapnutá"** – nech zapnutý (je to bezpečnostní funkce). Při vypnutí
       se napětí dál měří a zobrazuje, jen se podle něj neomezuje výkon přetoku.
 - [ ] **Statistika** – prázdná do prvního běhu, to je v pořádku
 
@@ -261,11 +260,11 @@ nesahá, hodnoty se ukládají samy a přežijí restart i nahrání nové verze
 | Chci změnit | Kde |
 |---|---|
 | Název instalace, **VRM Portal ID**, kapacita baterie, kWp, souřadnice | Konfigurace → Údaje o instalaci |
-| **Nominální max. přetok do sítě**, max. nabíjecí výkon | Konfigurace → Údaje o instalaci |
+| **Do sítě smí téct nejvýš** (limit od distributora), nabíjení ze sítě nejvýš | Konfigurace → Údaje o instalaci |
 | Shelly: IP adresa, device ID, auth key, server | Relé a Shelly → skupina daného zařízení |
 | Prahy a časování napěťové ochrany | Napětí a ochrana |
-| Tarify, prahy exportu, klidový setpoint, auto/manual, léto/zima, ranní odklad | Tarify / Režimy |
-| Interval kalibrace baterie, čas odpoledního dobití | Konfigurace → Kalibrace SOC baterie |
+| Tarify, prodejní ceny, „Držet na elektroměru", auto/manual, léto/zima, ranní odklad | Tarify / Režimy |
+| Interval kalibrace baterie, čas odpoledního dobití | Konfigurace → Kalibrace baterie |
 | URL spotových cen, adresa heartbeatu, podmínky kalibrace ze slunce | Stejné pro všechny instalace, mění se jen novou verzí flow |
 
 ---

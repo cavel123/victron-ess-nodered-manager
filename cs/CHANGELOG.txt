@@ -13,6 +13,15 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.063 – 2026-10-26
+
+- Srozumitelnejsi popisky nastaveni pro bezne uzivatele: nazvy poli rikaji, co pole dela, bez
+  zkratek SOC/setpoint/mechanismus A-B-C (napr. "Rezerva baterie jen pro dum", "Drzet na elektromeru",
+  "Vzdy nabit ze site aspon na", "Kdyz je levno, nabit ze site na").
+  Technicke podrobnosti a puvodni odborne nazvy zustaly v napovedach pod ikonou (i), ktere nove
+  zacinaji jednoduchou vetou. Volby typu ceny "Pevna cena (fix)" / "Spotova cena (spot)". Regulace ani
+  ulozena konfigurace se nemeni.
+
 ## 0.9.062 – 2026-10-26
 
 - Mobilni aplikace: radek s dnesni energii jako na Prehledu dashboardu - dodano do site, odebrano

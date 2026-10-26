@@ -287,6 +287,47 @@ zvlast. Kdo hlaseni nechce, vypne v Node-RED uzly "POST heartbeat" a "POST zive 
 (tab Statistika) - mobilni aplikace pak nefunguje, regulace bezi dal beze zmeny.
 
 
+### Zmena 19: srozumitelne popisky nastaveni (0.9.063)
+
+Nazvy poli na strankach Konfigurace, Rezimy, Tarify, Napeti a Rele/Shelly jsou prepsane do
+bezne reci - pole rika, co dela, bez zkratek SOC/setpoint/mechanismus. Technicke podrobnosti
+a puvodni odborne nazvy jsou v napovedach pod ikonou (i), ktere zacinaji jednoduchou vetou.
+Regulace, klice v konfiguraci ani ulozene hodnoty se nezmenily. Tento dokument na nekterych
+mistech pouziva puvodni nazvy; prevod:
+
+    puvodni nazev                                   novy nazev
+    Klidovy setpoint LETO / ZIMA                    Drzet na elektromeru LETO / ZIMA
+    Kolik % baterie rezervovano pro domacnost       Rezerva baterie jen pro dum
+    Min. prodejni cena pro export (pri nadbytku)    Min. prodejni cena pri nadbytku
+    Prah SOC pro export / Prodej do site pri
+      baterii od nastavenych % SOC (mech. A)        Kdyz je baterie plna na %, pak zacni prodavat
+    Kolik % kapacity baterie budu obchodovat (B)    beze zmeny
+    Min. cena pro prodej z baterie (B)              Min. prodejni cena z baterie
+    Plna baterie od (%)                             Baterie je plna od (%, doporuceno 97)
+    Nutne % SOC / Nutne SOC dosahnout do            Vzdy nabit ze site aspon na / ...a to do
+    Cilove % SOC pri nizke cene / do                Kdyz je levno, nabit ze site na / Levne
+                                                      nabijeni dokoncit do
+    Max. cena pro cilove SOC                        Levno = nakup nejvys za
+    Ranni odklad: Prah SOC, Min. prodejni cena      Baterie aspon, Jen pri
+      pro odklad, index jasnosti, Max. nabijeci       prodejni cene od, Vynechat zatazene dny (POCASI),
+      proud v okne                                    Baterii mezitim nabijet nejvys (doporuceno 5A)
+    Rucni AcPowerSetPoint / MaxFeedInPower          Odber ze site / Dodavka do site nejvys
+    Nominalni max. pretok do site                   Do site smi tect nejvys
+    Max. nabijeci vykon ze site                     Nabijet ze site nejvys
+    Typ nakupni / prodejni ceny (Fix / Spot)        Nakup / Prodej - typ ceny (Pevna / Spotova)
+    Fixni nakupni / prodejni cena                   Pevna cena silove elektriny / Pevna vykupni
+    Poplatek nakup VT / NT                          Poplatky VT / NT
+    Poplatek z prodeje                              Poplatek z prodeje (Kc za kWh)
+    Interval kalibrace, Dobit ze site nejpozdeji    Kalibrovat kazdych, Dobit na 100 % do
+    Napetova ochrana aktivni                        Ochrana pred prepetim zapnuta
+    Napetova ochrana: prah pro omezovani / navrat,  Omezovat dodavku do site od, Znovu pridavat,
+      krok, perioda, prodleva uvolneni                az napeti klesne pod, Ubrat pri kazdem
+                                                      kroku, Dalsi ubrani nejdriv za, Zkusit
+                                                      zase pridat po
+    Rele/Shelly: Min. SOC, Min. vykon FVE,          Baterie aspon, Jen kdyz panely vyrabi aspon,
+      Okno od/do, Prah prebytku, Prah SOC             Smi byt zapnuto od/do, Zapnout pri prebytku
+                                                      vyroby od, Baterie aspon
+
 ### Zmena 16: anglicka varianta flow (0.9.054)
 
 `verejna/flow-en.json` (na GitHubu `flow-en.json`) je verejna varianta s anglickym dashboardem.

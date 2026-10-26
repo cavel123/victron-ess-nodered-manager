@@ -4,6 +4,15 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.063 – 2026-10-26
+
+- Plain-language setting labels for non-technical users: field names say what the field does,
+  without SOC/setpoint/mechanism A-B-C jargon (e.g. "Battery reserve for the house only", "Hold at the
+  energy meter", "Always charge from grid to at least"). Technical
+  details and the original technical names stay in the (i) help texts, which now start with a
+  simple sentence. Price type options "Fixed price (fix)" / "Spot price". Control logic and saved
+  configuration unchanged.
+
 ## 0.9.062 – 2026-10-26
 
 - Mobile app: a row with today's energy as on the dashboard Overview - exported to the grid,

@@ -18,7 +18,7 @@ PolyForm Noncommercial License 1.0.0; commercial use by agreement: pavel@elektra
 
 - Selling to the grid
   - (A) Selling at a high price: PV surplus whenever the sell price is above "Min. sell price for
-    exporting surplus"; energy from the battery above a set SOC, but only in the most expensive
+    surplus"; energy from the battery above a set SOC, but only in the most expensive
     quarter of the day.
   - (B) Planned selling from the battery: every day a chosen share of the battery capacity is
     sold in the most expensive quarter-hours of the day (never below the price floor, the
@@ -83,7 +83,7 @@ PolyForm Noncommercial License 1.0.0; commercial use by agreement: pavel@elektra
    flow calculates and shows its recommendation ("MANUAL, recommended: ...") but writes nothing
    (except battery calibration). Then switch to an automatic mode.
 
-Safe first test in Manual: on the Modes page set a small manual AcPowerSetPoint (e.g. 100 W) and
+Safe first test in Manual: on the Modes page set a small "Import from the grid" value in the Manual control block (e.g. 100 W) and
 check on the GX/VRM that the grid setpoint changed - positive = import from the grid, negative =
 export.
 
@@ -112,7 +112,10 @@ Modes
   and price floor, full battery threshold, never discharge), charging from the grid (minimum SOC
   and its deadline, negative price; winter also target SOC, deadline and price cap) and the
   morning deferral (summer). Only one profile is shown at a time ("Show / edit settings for").
-  In Manual only the manual grid export/import fields are shown.
+  In Manual only the "Manual control" block is shown.
+  Field names are written in plain language (e.g. "Battery reserve for the house only", "Min.
+  sell price for surplus"); the technical names (SOC, setpoint,
+  mechanism A/B/C) are explained in the (i) help texts.
 
 Relays and Shelly
   Mode, thresholds and time windows of the GX relays and Shelly devices, and their current states.
