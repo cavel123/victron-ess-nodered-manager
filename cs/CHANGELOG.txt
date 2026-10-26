@@ -13,6 +13,11 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.064 – 2026-10-26
+
+- Oprava: verze Venus OS v horni liste dashboardu zmizela po importu nove verze flow a Deploy
+  (bez restartu Node-RED) - posilala se jen pri zmene. Ted se do listy posila i kazdych 15 s.
+
 ## 0.9.063 – 2026-10-26
 
 - Srozumitelnejsi popisky nastaveni pro bezne uzivatele: nazvy poli rikaji, co pole dela, bez

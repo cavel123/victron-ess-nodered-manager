@@ -4,6 +4,12 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.064 – 2026-10-26
+
+- Fix: the Venus OS version in the dashboard header disappeared after importing a new flow version
+  and deploying (without restarting Node-RED) - it was only sent on change. It is now also sent
+  every 15 s.
+
 ## 0.9.063 – 2026-10-26
 
 - Plain-language setting labels for non-technical users: field names say what the field does,
