@@ -4,6 +4,12 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.061 – 2026-10-26
+
+- English edition: remaining Czech words translated in the grid charging plan ("minimum", "cheap",
+  "from") and in the morning deferral state ("X of Y quarter-hours qualify").
+- Screenshots in the GitHub README (demo installation).
+
 ## 0.9.060 – 2026-10-26
 
 - Mobile app: a line with the flow version and the Venus OS version at the bottom.

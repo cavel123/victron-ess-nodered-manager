@@ -33,6 +33,22 @@ optional read-only mobile app.
   for every field, statistics, config backup / restore.
 - **Mobile app (PWA)** – read-only live view paired by a QR code.
 
+## Screenshots
+
+Demo installation (made-up data), English edition.
+
+**Dashboard – Overview**
+
+<img src="screenshots/overview.png" alt="Dashboard overview" width="900">
+
+| Mobile app | Dashboard on a phone |
+|---|---|
+| <img src="screenshots/app.png" alt="Mobile app" width="300"> | <img src="screenshots/overview-phone.png" alt="Dashboard on a phone" width="300"> |
+
+**Tariffs and prices** (market zone, fees, spot price chart) and **Modes** (summer/winter profiles)
+
+<img src="screenshots/tariffs.png" alt="Tariffs and prices" width="440"> <img src="screenshots/modes.png" alt="Modes" width="440">
+
 ## Requirements
 
 - Victron GX with **Venus OS Large** (Node-RED included) and **ESS** configured
@@ -113,6 +129,11 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 - **Dashboard 2.0** – přehled, nastavení s nápovědou u každého pole, statistika, záloha
   a obnova konfigurace.
 - **Mobilní aplikace** – živý přehled jen pro čtení, párování QR kódem.
+
+### Ukázky obrazovek
+
+Viz [Screenshots](#screenshots) výše (anglická varianta, ukázková instalace). Česká varianta
+vypadá stejně, jen s českými texty.
 
 ### Požadavky
 
