@@ -4,6 +4,10 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.060 – 2026-10-26
+
+- Mobile app: a line with the flow version and the Venus OS version at the bottom.
+
 ## 0.9.059 – 2026-10-26
 
 - Currency follows the market zone everywhere on the dashboard: prices on the Overview, the spot

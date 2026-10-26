@@ -13,6 +13,10 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.060 – 2026-10-26
+
+- Mobilni aplikace: dole pod odkazy radek s verzi flow a verzi Venus OS.
+
 ## 0.9.059 – 2026-10-26
 
 - Mena podle zony trhu vsude na dashboardu: ceny na Prehledu, graf spotovych cen (mrizka a popisky),
