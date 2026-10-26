@@ -4,6 +4,14 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.059 – 2026-10-26
+
+- Currency follows the market zone everywhere on the dashboard: prices on the Overview, the spot
+  price chart (grid and labels), plan and morning deferral messages, labels of price fields
+  (CZK/kWh or EUR/kWh). EUR prices with 3 decimals; price fields have a 0.001 step.
+- The mobile app shows prices in the installation's currency.
+- The README page starts with a link to GitHub.
+
 ## 0.9.058 – 2026-10-26
 
 - Spot prices for other European markets: new "Market (zone)" selection on the Tariffs and prices

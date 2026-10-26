@@ -13,6 +13,14 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.059 – 2026-10-26
+
+- Mena podle zony trhu vsude na dashboardu: ceny na Prehledu, graf spotovych cen (mrizka a popisky),
+  hlasky planu a ranniho odkladu, popisky cenovych poli (Kc/kWh nebo EUR/kWh). Ceny v EUR na 3
+  desetinna mista; cenova pole maji krok 0,001 (jinak se 0,085 EUR ulozilo jako 0,08).
+- Mobilni aplikace ukazuje ceny v mene instalace. Prehled instalaci na serveru ukazuje zonu.
+- README na dashboardu zacina odkazem na GitHub.
+
 ## 0.9.058 – 2026-10-26
 
 - Spotove ceny i pro dalsi evropske trhy: na strance Tarify a ceny novy vyber "Trh (zona)".
