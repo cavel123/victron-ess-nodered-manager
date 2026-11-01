@@ -4,6 +4,15 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.070 – 2026-11-01
+
+- **Fix: winter calibration never charges at the high tariff.** In 0.9.065, after 3 nights in LT
+  the calibration day started and topped up from the grid to 100 % even after LT ended. In winter
+  calibration now charges only in LT: with spot, the first 3 nights only in quarter-hours with spot
+  at or below the day's average, then in every LT quarter-hour until the battery reaches 100 %. The
+  calibration day and the afternoon top-up above 95 % are not used in winter. Summer unchanged.
+- Statistics on the Overview: table with borders.
+
 ## 0.9.069 – 2026-11-01
 
 - **Relays and Shelly - "Automatic - by price" mode with a switching plan.** New field "Switch by":

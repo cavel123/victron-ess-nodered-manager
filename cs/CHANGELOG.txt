@@ -13,6 +13,15 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.070 – 2026-11-01
+
+- **Oprava: zimni kalibrace uz nikdy nenabiji ve VT.** V 0.9.065 po 3 nocich v NT nastoupil
+  kalibracni den a ten dobijel ze site do 100 % i po konci NT (videno doma: NT 18-20, ve 20:03 se
+  dal nabijelo). V zime se ted kalibrace nabiji vyhradne v NT: pri spotu prvni 3 noci jen ve
+  ctvrthodinach se spotem do prumeru dne, potom v kazde NT ctvrthodine, dokud baterie nedojede na
+  100 %. Kalibracni den ani odpoledni dobiti od 95 % se v zime nepouziji. Leto beze zmeny.
+- Statistika na Prehledu: tabulka s ramecky.
+
 ## 0.9.069 – 2026-11-01
 
 - **Rele a Shelly - rezim "Automaticky - podle ceny" s planem sepnuti.** Nove pole "Spinat podle":

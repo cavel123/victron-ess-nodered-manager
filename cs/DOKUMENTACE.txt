@@ -325,7 +325,10 @@ Nove v zimnim profilu (podle `fveSeason()`, bez dalsiho nastaveni):
   jedne noci, naplanuje se na dalsi.
 - Pojistka "BMS drzi 98 % hodinu" plati i pro nabijeni v NT, ale hodina se pocita jen behem
   nabijeni (konec NT v 98 % neni dukaz, ze BMS dal nepusti).
-- 4. den rezimu nastoupi kalibracni den jako v lete (pojistka, kdyby se ani za 3 noci nedojelo).
+- Od 0.9.070 v zime ZADNE dobiti ve VT: kalibracni den ani odpoledni dobiti od 95 % se v zime
+  nepouziji (0.9.065 po 3 nocich nasadil kalibracni den a ten jel ve VT do 100 %, i po konci NT).
+  Od 4. dne kalibracniho rezimu (`state.calNtBezCeny`) se pri spotu bere kazda NT ctvrthodina
+  bez ohledu na prumer dne - kalibrace se tak dokonci v nejblizsich nocich.
 - `ex_decide`: v kalibracnim rezimu B neprodava ani behem nabijeni ze site (calSolar, ktery ho
   jinak blokuje, se pri nabijeni ze site rusi).
 
