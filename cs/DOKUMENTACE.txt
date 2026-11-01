@@ -633,6 +633,27 @@ Odkazy "kap. N" v tabulce a v kap. 6 miri na kapitoly ZADANI
 | Statistika | pametova pocitadla dle kap. 12 |
 | Dashboard – widgety a pomocne funkce | vsechny Dashboard 2.0 uzly + formatovaci funkce |
 
+### Duvody v radku "Stav dodavky/nabijeni" (Prehled)
+
+    zadny-zasah / klidovy-setpoint   bezna samospotreba, regulace drzi "Drzet na elektromeru"
+    prodej-A-prebytek                prebytek FVE jde do site (cena nad min. prodejni cenou)
+    A-ceka-na-prebytek               prodej je povoleny, ale neni co poslat (zadny prebytek)
+    prodej-A-z-baterie               draha elektrina - prodava se i z baterie (mechanismus A)
+    prodej-A-plna-baterie            baterie je plna, vyroba se pousti do site
+    prodej-z-baterie                 planovany prodej z baterie v nejdrazsim okne (mechanismus B)
+    ranni-odklad                     rano se prodava, baterie se nabije pozdeji (mechanismus C)
+    nabijeni-ze-site                 nabiji se ze site (povinne minimum, levne nabijeni, zaporna
+                                     cena, zimni kalibrace v NT)
+    jen-prebytek-FVE                 zapnuto "Nikdy nevybijet baterii do site" - do site jen prebytek
+    jen-prebytek-pod-prahem          totez, ale cena je pod min. prodejni cenou - neposila se nic
+    kalibrace-slunce                 kalibracni den ze slunce - neprodava se, prebytek do baterie
+    kalibrace-cekani                 kalibracni rezim po uplynuti intervalu - neprodava se
+    kalibracni-den                   naplanovany kalibracni den (pojistka) - neprodava se
+    kalibrace-dobiti                 kalibrace dobiji ze site na 100 %
+
+Pripisek "pretok FVE zakazan" = regulace zakazala posilat prebytek z panelu do site (napr. pri
+nizke cene). Skutecny tok na pripojce ukazuje grafika toku energie na Prehledu.
+
 ### Priorita v centralni ESS funkci (`ex_decide`)
 
 1. Kalibrace baterie ze site – bezi i v rezimu Manual, ale jen kdyz je zrovna levne (kap. 0, Oprava 4)

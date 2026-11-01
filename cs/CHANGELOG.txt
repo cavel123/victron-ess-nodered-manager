@@ -13,6 +13,12 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.067 – 2026-11-01
+
+- Kratsi a jednodussi napovedy (i) u vsech dlouhych poli na Prehledu, v Konfiguraci, Rezimech
+  a Tarifech - par vet bez technickych pojmu. Podrobnosti (kody duvodu, pojistky, vypocty) jsou
+  v README. Regulace se nemeni.
+
 ## 0.9.066 – 2026-11-01
 
 - Kratsi a srozumitelnejsi napoveda u kalibrace baterie (podrobny popis zustava v README).

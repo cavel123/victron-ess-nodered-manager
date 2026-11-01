@@ -4,6 +4,12 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.067 – 2026-11-01
+
+- Shorter, simpler (i) help texts for all long fields on the Overview, Setup, Modes and Tariffs
+  pages - a few sentences without technical terms. Details (reason codes, safety nets,
+  calculations) are in the README. Control logic unchanged.
+
 ## 0.9.066 – 2026-11-01
 
 - Shorter, simpler help text for battery calibration (the detailed description stays in the README).
