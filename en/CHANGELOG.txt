@@ -4,6 +4,17 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.069 – 2026-11-01
+
+- **Relays and Shelly - "Automatic - by price" mode with a switching plan.** New field "Switch by":
+  lowest spot price / low tariff (LT) / below a set price (+ field "Set price"), plus "Minimum run time
+  (h)" and "Start from". From the "Start from" time the switching quarter-hours are planned for 24
+  hours: for spot the cheapest quarter-hours adding up to the minimum run time, for LT all LT
+  quarter-hours, for the set price all quarter-hours up to it; if that is not enough for the minimum
+  run time, the cheapest others are added. Always on at a negative price. Prices include HT/LT fees.
+  The Current states table shows when a switched-off device will switch on.
+- Earnings and savings statistics are calculated every 3 minutes (previously every minute).
+
 ## 0.9.068 – 2026-11-01
 
 - **Sell from the battery only when it pays off.** New field "Battery wear (CZK/kWh)" on the Tariffs

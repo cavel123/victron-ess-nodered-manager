@@ -13,6 +13,17 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.069 – 2026-11-01
+
+- **Rele a Shelly - rezim "Automaticky - podle ceny" s planem sepnuti.** Nove pole "Spinat podle":
+  nejnizsi cena spotu / nizky tarif (NT) / pod zadanou cenou (+ pole "Zadana cena"), dale
+  "Minimalni doba behu (h)" a "Spoustet od". Od casu "Spoustet od" se na 24 hodin naplanuji
+  ctvrthodiny sepnuti: u spotu nejlevnejsi ctvrthodiny v souctu min. doby behu, u NT vsechny NT
+  ctvrthodiny, u zadane ceny vsechny ctvrthodiny do ni; kdyz to na min. dobu behu nestaci, doplni
+  se nejlevnejsi dalsi. Pri zaporne cene zapnuto vzdy. Ceny vcetne poplatku VT/NT. V tabulce
+  Aktualni stavy je u vypnuteho zarizeni, kdy sepne.
+- Statistika vydelku a uspory se pocita kazde 3 minuty (driv kazdou minutu).
+
 ## 0.9.068 – 2026-11-01
 
 - **Prodej z baterie jen kdyz se vyplati.** Nove pole "Opotrebeni baterie (Kc/kWh)" na strance

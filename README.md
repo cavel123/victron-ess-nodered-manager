@@ -17,6 +17,10 @@ optional read-only mobile app.
 - **Selling to the grid** – (A) surplus PV and battery energy when the sell price is high,
   (B) a daily plan of the most expensive quarter-hours to sell a chosen share of the battery,
   (C) morning deferral: keep morning PV for the grid when it sells better than at noon.
+- **Battery selling only when it pays off** – the battery is sold only if the sell price covers
+  the cost of recharging it (/ 0.85 for losses) plus *battery wear* in CZK/kWh (roughly battery
+  price / (capacity × cycles × 0.8)). In winter the recharge cost is the cheapest grid price incl.
+  fees in the next 24 h, in summer the lowest sell price (PV refills the battery).
 - **Charging from the grid** – a *minimum SOC* guaranteed by a set time, a *target SOC* only
   when the price is below a cap (reduced by the PV forecast), and charging at negative prices.
 - **Summer / winter profiles** – each season has its own settings; switching by date or manually.
@@ -28,7 +32,11 @@ optional read-only mobile app.
   with a small top-up from the grid in the afternoon, instead of charging a half-empty battery
   at night.
 - **Grid voltage protection** – step-wise reduction of feed-in when the phase voltage is high.
-- **Relays and Shelly** (GX relays, local Shelly by IP, Shelly Cloud) switched by SOC / PV surplus.
+- **Relays and Shelly** (GX relays, local Shelly by IP, Shelly Cloud) – *automatic by surplus and
+  SOC*, or *automatic by price*: the lowest spot price, the low tariff, or below a set price, with a
+  minimum run time per day counted from a set start time (e.g. a boiler 3 h in the cheapest hours).
+- **Statistics** – estimated earnings from selling and savings from PV self-consumption per day,
+  week and month.
 - **Dashboard 2.0** – overview (battery, energy flow, today's energy, plan), settings with help
   for every field, statistics, config backup / restore.
 - **Mobile app (PWA)** – read-only live view paired by a QR code.
@@ -117,6 +125,10 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 
 - **Prodej do sítě** – (A) přebytek a energie z baterie při vysoké ceně, (B) denní plán
   nejdražších čtvrthodin pro prodej nastavené části baterie, (C) ranní odklad nabíjení.
+- **Prodej z baterie jen když se vyplatí** – prodejní cena musí pokrýt cenu, za kterou se baterie
+  znovu nabije (/ 0,85 za ztráty), plus *opotřebení baterie* v Kč/kWh (zhruba cena baterie /
+  (kapacita × počet cyklů × 0,8)). V zimě se počítá s nejlevnějším nákupem ze sítě vč. poplatků
+  v příštích 24 h, v létě s nejnižší prodejní cenou (baterii doplní FVE).
 - **Nabíjení ze sítě** – *nutné SOC* do nastaveného času, *cílové SOC* jen pod cenovým stropem
   (snížené podle předpovědi FVE), nabíjení při záporné ceně.
 - **Letní a zimní profil** – každé období má vlastní nastavení; přepínání podle data nebo ručně.
@@ -125,7 +137,10 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 - **Kalibrace SOC baterie** – kalibrační den, kdy se baterie nabije ze slunce a odpoledne se ze
   sítě jen dorovná, místo nabíjení poloprázdné baterie v noci.
 - **Napěťová ochrana** – postupné omezování přetoku při vysokém napětí fází.
-- **Relé a Shelly** (relé GX, lokální Shelly podle IP, Shelly Cloud) podle SOC a přebytku.
+- **Relé a Shelly** (relé GX, lokální Shelly podle IP, Shelly Cloud) – *automaticky podle přebytku
+  a SOC*, nebo *automaticky podle ceny*: nejnižší cena spotu, nízký tarif, nebo pod zadanou cenou,
+  s minimální dobou běhu za den od nastaveného času (např. bojler 3 h v nejlevnějších hodinách).
+- **Statistika** – odhad výdělku z prodeje a úspory z vlastní spotřeby FVE za den, týden a měsíc.
 - **Dashboard 2.0** – přehled, nastavení s nápovědou u každého pole, statistika, záloha
   a obnova konfigurace.
 - **Mobilní aplikace** – živý přehled jen pro čtení, párování QR kódem.
