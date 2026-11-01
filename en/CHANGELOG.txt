@@ -4,6 +4,11 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.071 – 2026-11-01
+
+- Mobile app: a Statistics table at the bottom as on the dashboard Overview - estimated earnings
+  from selling, PV savings and the total per day, week (7 days) and month (30 days).
+
 ## 0.9.070 – 2026-11-01
 
 - **Fix: winter calibration never charges at the high tariff.** In 0.9.065, after 3 nights in LT

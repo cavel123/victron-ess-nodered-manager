@@ -13,6 +13,11 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.071 – 2026-11-01
+
+- Mobilni aplikace: dole tabulka Statistika jako na Prehledu dashboardu - odhad vydelku z prodeje,
+  uspora z FVE a celkem za den, tyden (7 dni) a mesic (30 dni).
+
 ## 0.9.070 – 2026-11-01
 
 - **Oprava: zimni kalibrace uz nikdy nenabiji ve VT.** V 0.9.065 po 3 nocich v NT nastoupil
