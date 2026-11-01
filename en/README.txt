@@ -118,7 +118,9 @@ Modes
   mechanism A/B/C) are explained in the (i) help texts.
 
 Relays and Shelly
-  Mode, thresholds and time windows of the GX relays and Shelly devices, and their current states.
+  Mode (off / automatic - surplus and SOC / automatic - by price / always on), thresholds and time
+  windows of the GX relays and Shelly devices, and their current states. "By price" switches on when
+  the buy price incl. fees is at or below the day's average or negative.
 
 Voltage and protection
   Phase voltages, protection state and allowed power cap, protection settings, worst voltage chart.
@@ -135,6 +137,11 @@ README / Changelog
 - Sell price = spot (or fixed) price minus the selling fee. Buy price = spot (or fixed) price plus
   the HT or LT fee according to the tariff schedule. All decisions use these final prices.
 - Household reserve: no selling from the battery and no idle feed-in goes below it.
+- Selling from the battery only when it pays off: sell price >= refill cost / 0.85 + battery wear
+  (Tariffs and prices, roughly battery price / (capacity x cycles x 0.8)). Refill cost: in winter the
+  cheapest buy price in the next 24 h, in summer the lowest sell price in the next 24 h.
+- Statistics on the Overview: estimated earnings (exported x sell price) and PV savings
+  ((PV - exported) x buy price) per day, 7 and 30 days.
 - Minimum SOC: charged from the grid by its deadline at any price; also the floor for selling.
 - Idle setpoint: the grid setpoint held when no mechanism acts (0 = zero at the meter; negative =
   slight feed-in; positive = slight import).

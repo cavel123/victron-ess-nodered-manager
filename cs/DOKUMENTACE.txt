@@ -287,6 +287,25 @@ zvlast. Kdo hlaseni nechce, vypne v Node-RED uzly "POST heartbeat" a "POST zive 
 (tab Statistika) - mobilni aplikace pak nefunguje, regulace bezi dal beze zmeny.
 
 
+### Zmena 21: vyhodnost prodeje z baterie, rele podle ceny, vydelek, upozorneni (0.9.068)
+
+- **Vyhodnost prodeje z baterie** (`ex_decide`, `batProfitOk`): prodana kWh z baterie se musi znovu
+  nabit, cestou se ztrati ~15 % a baterie se opotrebi. Mechanismus A (vybijeni) i B se pusti jen pri
+      prodejni cena >= cena dobiti / 0,85 + opotrebeni (`batteryWearPerKWh`, Tarify a ceny).
+  Cena dobiti: v zime nejlevnejsi koncovy nakup (vcetne poplatku VT/NT) v pristich 24 h, v lete
+  nejnizsi prodejni cena v pristich 24 h (min. 0) - baterii doplni FVE, ktera by jinak vynesla aspon
+  tolik. V CZ s distribuci ~1,5-3 Kc/kWh to v zime prodej z baterie vetsinou zastavi - zamerne:
+  prodat za spot - 0,3 a dokoupit za spot + distribuce je ztrata. Opotrebeni zhruba
+  cena baterie / (kapacita x cykly x 0,8). Ceny po ctvrthodinach pocita helper `fveCenyDen()`.
+- **Rele a Shelly "Automaticky - podle ceny"** (`mode: 'price'`, helper `fveLevneTed()`): zapnuto,
+  kdyz je koncova nakupni cena do prumeru dne nebo zaporna (bez cen: nizky tarif). Rele navic jen
+  v casovem okne. Prahy SOC/vykonu/prebytku se mimo rezim "prebytek a SOC" schovaji.
+- **Statistika na Prehledu** (`fin_acc`, soubor `finance.json`): kazdou minutu z prirustku denni
+  energie: vydelek = dodano x prodejni cena, uspora = (FVE - dodano) x nakupni cena. Den, 7 a 30 dni.
+- **Upozorneni** (`ud_eval` -> server `udalost.php` -> mail): pri zmene stavu - zacatek/konec
+  kalibrace, nouzovy kalibracni den, nestihne se nutne SOC, chybi spot, Victron bez dat > 10 min.
+  Prvni minuta po startu jen nacte stav. Server posila jen u vlastniho tokenu, max 1x za 6 h na udalost.
+
 ### Zmena 20: zimni kalibrace v nizkem tarifu (0.9.065)
 
 V zime je slunce malo, baterie na prah 95 % sama nedojede a kalibrace koncila kalibracnim dnem:

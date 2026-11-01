@@ -4,6 +4,26 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.068 – 2026-11-01
+
+- **Sell from the battery only when it pays off.** New field "Battery wear (CZK/kWh)" on the Tariffs
+  and prices page (roughly battery price / (capacity x cycles x 0.8), default 0). The battery is
+  sold (mechanism A and planned selling B) only at a sell price of at least (refill cost / 0.85) +
+  wear. Refill cost: in winter the cheapest buy price in the next 24 h, in summer the lowest sell
+  price in the next 24 h (PV refills the battery). Selling PV surplus is unchanged. When selling
+  does not pay off, the Battery selling plan row on the Overview says so.
+- **Relays and Shelly: mode "Automatic - by price".** Switches on when electricity is cheap (buy
+  price incl. fees at or below the day's average, or negative). Relays also only within the set time
+  window. The existing mode is now called "Automatic - surplus and SOC"; its thresholds are hidden in
+  the other modes.
+- **Overview - Statistics** (formerly Today's statistics): instead of "kWh exported today" (already
+  in the energy row) an estimate of earnings from selling, savings from PV self-consumption and the
+  total - per day, 7 days and 30 days. Calculated every minute from the Victron counters and current
+  prices, stored in a file (survives a restart).
+- **E-mail notifications** (own-token installations only): calibration start and end, fallback
+  calibration day, required SOC will not be reached, spot prices missing, Victron without data for
+  over 10 minutes.
+
 ## 0.9.067 – 2026-11-01
 
 - Shorter, simpler (i) help texts for all long fields on the Overview, Setup, Modes and Tariffs

@@ -13,6 +13,25 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.068 – 2026-11-01
+
+- **Prodej z baterie jen kdyz se vyplati.** Nove pole "Opotrebeni baterie (Kc/kWh)" na strance
+  Tarify a ceny (zhruba cena baterie / (kapacita x pocet cyklu x 0,8), vychozi 0). Z baterie se
+  prodava (mechanismus A i planovany prodej B) jen pri prodejni cene aspon (cena dobiti / 0,85) +
+  opotrebeni. Cena dobiti: v zime nejlevnejsi nakup v pristich 24 h, v lete nejnizsi prodejni
+  cena v pristich 24 h (baterii doplni FVE). Prodej prebytku FVE beze zmeny. Kdyz se prodej
+  nevyplati, rekne to radek Plan prodeje z baterie na Prehledu.
+- **Rele a Shelly: rezim "Automaticky - podle ceny".** Sepne, kdyz je elektrina levna (nakupni
+  cena vcetne poplatku do prumeru dne, nebo zaporna). Rele navic jen v nastavenem casovem okne.
+  Dosavadni rezim se jmenuje "Automaticky - prebytek a SOC"; jeho prahy se v ostatnich rezimech
+  schovaji.
+- **Prehled - Statistika** (driv Dnesni statistika): misto "kWh dodano do site dnes" (je uz
+  v radku energie) odhad vydelku z prodeje, uspory z vlastni spotreby FVE a celkem - za den,
+  7 dni a 30 dni. Pocita se kazdou minutu z pocitadel Victronu a aktualnich cen, uklada se do
+  souboru (prezije restart).
+- **Upozorneni e-mailem** (jen instalace s vlastnim tokenem): zacatek a konec kalibrace, nouzovy
+  kalibracni den, nestihne se nutne SOC, chybi spotove ceny, Victron bez dat pres 10 minut.
+
 ## 0.9.067 – 2026-11-01
 
 - Kratsi a jednodussi napovedy (i) u vsech dlouhych poli na Prehledu, v Konfiguraci, Rezimech
