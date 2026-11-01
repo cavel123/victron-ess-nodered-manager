@@ -13,6 +13,11 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.072 – 2026-11-01
+
+- Mobilni aplikace: probihajici kalibrace baterie je zvyraznena - cervena svisla cara, svetle
+  cerveny podklad a tucny text (jen kdyz kalibrace bezi).
+
 ## 0.9.071 – 2026-11-01
 
 - Mobilni aplikace: dole tabulka Statistika jako na Prehledu dashboardu - odhad vydelku z prodeje,
