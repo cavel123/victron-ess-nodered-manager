@@ -287,6 +287,29 @@ zvlast. Kdo hlaseni nechce, vypne v Node-RED uzly "POST heartbeat" a "POST zive 
 (tab Statistika) - mobilni aplikace pak nefunguje, regulace bezi dal beze zmeny.
 
 
+### Zmena 20: zimni kalibrace v nizkem tarifu (0.9.065)
+
+V zime je slunce malo, baterie na prah 95 % sama nedojede a kalibrace koncila kalibracnim dnem:
+dobiti ze site do 100 % od ~11-13 h bez ohledu na cenu. U 60 kWh baterie z ~40 % je to ~36 kWh
+ve VT (jen rozdil distribuce VT/NT 1,5 Kc/kWh = ~54 Kc na kazdou kalibraci, plus drazsi polední spot).
+
+Nove v zimnim profilu (podle `fveSeason()`, bez dalsiho nastaveni):
+
+- `cal_eval`: prvni 3 dny kalibracniho rezimu (`ZIMA_NOCI`) se kalibracni den nevybira a nastavi se
+  `state.calNtActive`. Odpoledni dobiti pri SOC nad prahem (`topUpFromSoc`) zustava.
+- `nb_plan`: pri `calNtActive` pridava uroven 100 % do nejblizsich NT ctvrthodin od ted, dokud
+  nepokryje chybejici energii (max. nabijeci vykon x 0,25 h na ctvrthodinu). Pri fixni nakupni
+  cene se bere kazda NT ctvrthodina, pri spotu jen ty, kde je spot (bez poplatku) do prumeru dne -
+  vecerni NT ve spicce (napr. 9 Kc) se preskoci. Zamerne nejblizsi, ne nejlevnejsi z celeho
+  horizontu: levnejsi zitrejsi noc by kalibraci odsunula a po celou dobu kalibracniho rezimu se
+  z baterie neprodava. Plan se prepocitava kazdych 5 minut z aktualniho SOC - co se nevejde do
+  jedne noci, naplanuje se na dalsi.
+- Pojistka "BMS drzi 98 % hodinu" plati i pro nabijeni v NT, ale hodina se pocita jen behem
+  nabijeni (konec NT v 98 % neni dukaz, ze BMS dal nepusti).
+- 4. den rezimu nastoupi kalibracni den jako v lete (pojistka, kdyby se ani za 3 noci nedojelo).
+- `ex_decide`: v kalibracnim rezimu B neprodava ani behem nabijeni ze site (calSolar, ktery ho
+  jinak blokuje, se pri nabijeni ze site rusi).
+
 ### Zmena 19: srozumitelne popisky nastaveni (0.9.063)
 
 Nazvy poli na strankach Konfigurace, Rezimy, Tarify, Napeti a Rele/Shelly jsou prepsane do

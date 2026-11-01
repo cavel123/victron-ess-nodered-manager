@@ -4,6 +4,18 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.065 – 2026-11-01
+
+- **Winter calibration in the low tariff.** In the winter profile (automatically) the battery is not
+  topped up in the afternoon at the high tariff during calibration, but charged to 100 % in the low
+  tariff: with a fixed buy price in any LT quarter-hour, with spot only in LT quarter-hours with spot
+  at or below the day's average (an evening LT during a price peak is skipped). It charges at the set
+  max. charging power in the nearest suitable LT quarter-hours; what does not fit into one night is
+  charged the next night. The calibration day with daytime top-up starts only on day 4 of the
+  calibration mode (safety net). The afternoon top-up above the SOC threshold (default 95 %) stays.
+  Summer behaviour unchanged. The Overview grid charging plan shows "calibration 100 % in LT (...)".
+- In calibration mode planned selling from the battery (B) does not sell even during grid charging.
+
 ## 0.9.064 – 2026-10-26
 
 - Fix: the Venus OS version in the dashboard header disappeared after importing a new flow version
