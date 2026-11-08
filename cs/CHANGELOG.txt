@@ -13,6 +13,14 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.073 – 2026-11-08
+
+- **Oprava: po pulnoci se az 30 minut pocitalo se vcerejsimi spotovymi cenami.** Ceny se stahuji
+  kazdych 30 minut, takze po pulnoci byly jako "dnes" porad vcerejsi - aktualni cena, mechanismus A,
+  ranni odklad i graf pouzivaly vcerejsek a planovac nabijeni fixni zalohu. Dnesni ceny pritom uz
+  byly stazene jako zitrejsi; ted se v pulnoci hned posunou na dnesek.
+- Upozorneni "chybi spotove ceny" az kdyz ceny chybi 20 minut v kuse (chodilo kazdou noc v 00:01).
+
 ## 0.9.072 – 2026-11-01
 
 - Mobilni aplikace: probihajici kalibrace baterie je zvyraznena - cervena svisla cara, svetle

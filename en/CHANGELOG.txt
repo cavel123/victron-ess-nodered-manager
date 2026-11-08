@@ -4,6 +4,16 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.073 – 2026-11-08
+
+- **Fix: after midnight yesterday's spot prices were used for up to 30 minutes.** Prices are
+  downloaded every 30 minutes, so after midnight "today" was still yesterday - the current price,
+  mechanism A, morning deferral and the chart used yesterday and the charging planner used the fixed
+  fallback. Today's prices were already downloaded as tomorrow's; now they are moved to today at
+  midnight.
+- The "spot prices missing" notification is sent only after prices are missing for 20 minutes in a
+  row (it came every night at 00:01).
+
 ## 0.9.072 – 2026-11-01
 
 - Mobile app: a running battery calibration is highlighted - red vertical bar, light red background
