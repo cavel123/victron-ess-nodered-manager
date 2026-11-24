@@ -13,6 +13,17 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.076 – 2026-11-24
+
+- **Oprava: na telefonu se v dashboardu lamala slova uprostred ("tomorro-w") v druhem radku tabulky Energie
+  dnes** (predpoved a ceny). Bunky maji zakaz lamani slov a mensi pismo u delsich hodnot.
+- **Oprava anglicke varianty: v nove vete a v tabulce zustaly nektere ceske spojky** ("za", "na", "od", "z"
+  a "dnes" v kratke predpovedi), napr. "Selling the PV surplus to the grid za 5,41 CZK/kWh". Preklad se tyto
+  kratke spojky netykal, doplneny jsou presnymi nahradami (`_nahrady` v `i18n/en.json`).
+- **Oprava: v detailu pod vetou (ikona (i)) se v anglicke variante odriznul zacatek textu** ("attery: no more
+  windows"). Prefix se uz neodriznuje pevnou delkou 18 znaku.
+- Veta "Nic se neprodava" ukazuje cenu s jednotkou (Kc/kWh).
+
 ## 0.9.075 – 2026-11-24
 
 - **Prehled a mobilni aplikace: jedna veta misto ctyr stavovych radku.** Plan prodeje z baterie, Plan

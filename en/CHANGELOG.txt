@@ -4,6 +4,19 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.076 – 2026-11-24
+
+- **Fix: on a phone the dashboard broke words in the middle ("tomorro-w") in the second row of the Energy
+  today table** (forecast and prices). The cells now forbid word breaks and use a smaller font for longer
+  values.
+- **Fix in the English variant: some Czech conjunctions remained in the new sentence and table** ("za", "na",
+  "od", "z" and "dnes" in the short forecast), e.g. "Selling the PV surplus to the grid za 5,41 CZK/kWh". The
+  translation check does not cover such short fragments, so they are now handled by exact replacements
+  (`_nahrady` in `i18n/en.json`).
+- **Fix: in the English variant the details under the sentence (the (i) icon) lost the beginning of the text**
+  ("attery: no more windows"). The prefix is no longer cut at a fixed length of 18 characters.
+- The "Nothing is being sold" sentence shows the price with its unit (CZK/kWh).
+
 ## 0.9.075 – 2026-11-24
 
 - **Overview and mobile app: one sentence instead of four status lines.** Battery sell plan, grid
