@@ -13,6 +13,37 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.075 – 2026-11-24
+
+- **Prehled a mobilni aplikace: jedna veta misto ctyr stavovych radku.** Plan prodeje z baterie, Plan
+  nabijeni ze site, Stav dodavky/nabijeni a Ranni odklad nabijeni se v kazdem okamziku z velke casti
+  kryly. Nahradila je jedina veta ve tvaru "co se deje TED. Dal: co je NEJBLIZSI v planu", pod tabulkou
+  Energie dnes. Barva podle stavu: zelena = prodej, modra = nabijeni, oranzova = cekani/odklad,
+  seda = nic se nedeje, cervena = pozor (nutne SOC se nestihne nabit).
+  Kdyz se z baterie neprodava, veta rika PROC (zakaz vybijeni, 0 % k obchodovani, rezerva baterie 100 %,
+  nic nad rezervou, baterie se dobiji na cilove SOC, prodej se nevyplati, vycerpany denni limit) -
+  misto drivejsiho "dnes uz zadne okno, 0.0/23.4 kWh (v baterii nad 100 % jen 0.0 kWh)".
+  "Dal:" ukaze jedinou nejblizsi udalost: prodej z baterie, planovane nabijeni (s "v NT", kdyz prvni
+  ctvrthodina lezi v nizkem tarifu) nebo konec ranniho odkladu.
+  Puvodni podrobne texty zustaly jako detail pod ikonou (i). Spodni tabulky Prehledu jsou nove jedna
+  (Rezim, Distribucni tarif, Spojeni s Victronem). Aplikace pouzije vetu, kdyz ji flow posila;
+  se starsim flow zobrazuje puvodni radky.
+- **Mobilni aplikace (jen soubory v `server/web/app/`, flow se nemeni; verze aplikace v15).** Karta
+  Energie dnes je ve dvou samostatnych kartach po jednom radku (Dodano / Odebrano / FVE dnes a Predpoved /
+  Nakupni / Prodejni cena), ikony jsou nad textem, tucne jsou jen cisla (jednotky kWh a Kc/kWh normalnim
+  pismem). Ve spodni tabulce maji Rezim, Tarif a Spojeni na mobilu cary mezi sebou (jeden sloupec).
+  Pri kazde zmene souboru aplikace se zvysuje `CACHE` v `sw.js` i `?v=` v `index.html` a `podpora.html`,
+  jinak telefon drzi starou kopii - u verzi 0.9.074 a 0.9.075 se to nejdriv zapomnelo.
+
+## 0.9.074 – 2026-11-24
+
+- **Prehled a mobilni aplikace: predpoved vyroby, nakupni a prodejni cena jsou ve druhem radku
+  tabulky "Energie dnes"** (pod Dodano / Odebrano / Vyroba FVE dnes, nad planem prodeje). Ze spodnich
+  tabulek se vyradily; zustal Stav dodavky, Rezim, Ranni odklad, Tarif a Spojeni s Victronem.
+  Predpoved je kratce ("dnes 12,3 kWh · zitra 9,1 kWh"), index jasnosti je v tooltipu. Napovedy
+  presunutych polozek jsou v tooltipech nove tabulky. Tabulka ma novy sluc uzel `d_energy_fn`
+  (energie z e_den + predpoved a ceny z d_info_fn), protoze ui-template si pamatuje jen posledni zpravu.
+
 ## 0.9.073 – 2026-11-08
 
 - **Oprava: po pulnoci se az 30 minut pocitalo se vcerejsimi spotovymi cenami.** Ceny se stahuji

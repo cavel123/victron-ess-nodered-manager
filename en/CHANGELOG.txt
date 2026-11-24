@@ -4,6 +4,40 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.075 – 2026-11-24
+
+- **Overview and mobile app: one sentence instead of four status lines.** Battery sell plan, grid
+  charging plan, delivery/charging status and morning deferral mostly overlapped at any moment. They are
+  replaced by a single sentence "what is happening NOW. Next: the NEAREST thing in the plan", below the
+  Energy today table. The colour follows the state: green = selling, blue = charging, orange =
+  waiting/deferral, grey = nothing going on, red = attention (the required SOC will not be reached).
+  When the battery is not being sold the sentence says WHY (discharge to grid forbidden, 0 % to trade,
+  battery reserve 100 %, nothing above the reserve, charging to the target SOC, selling not
+  worthwhile, daily limit used up) instead of the former "no window left today, 0.0/23.4 kWh (only
+  0.0 kWh above 100 % in the battery)". "Next:" shows the single nearest event: battery selling,
+  planned charging (with "in LT" when the first quarter-hour is in the low tariff) or the end of
+  the morning deferral.
+  The original detailed texts remain as details under the (i) icon. The bottom tables of the overview
+  are now one (Mode, Distribution tariff, Connection to Victron). The app uses the sentence when the
+  flow sends it; with an older flow it shows the original rows.
+- **Mobile app (only the files in `server/web/app/`, the flow is unchanged; app version v15).** The Energy
+  today card is now two separate cards with one row each (Delivered / Imported / PV today and Forecast /
+  Buy / Sell price), icons are above the text, and only the numbers are bold (units such as kWh and
+  CZK/kWh in regular weight). In the bottom table, Mode, Tariff and Connection have divider lines on
+  mobile (one column). Whenever an app file changes, `CACHE` in `sw.js` and `?v=` in `index.html` and
+  `podpora.html` must be bumped, otherwise the phone keeps the old copy - this was first forgotten for
+  versions 0.9.074 and 0.9.075.
+
+## 0.9.074 – 2026-11-24
+
+- **Overview and mobile app: the production forecast, buy price and sell price are now in the second
+  row of the "Energy today" table** (below Delivered / Imported / PV production today, above the sell
+  plan). They were removed from the bottom tables, which keep Delivery/charging status, Mode, Morning
+  deferral, Tariff and Connection to Victron. The forecast is short ("today 12.3 kWh · tomorrow
+  9.1 kWh"); the clearness index is in the tooltip. The help texts of the moved items are in the
+  tooltips of the new table. The table has a new merge node `d_energy_fn` (energy from e_den +
+  forecast and prices from d_info_fn), because a ui-template only remembers the last message.
+
 ## 0.9.073 – 2026-11-08
 
 - **Fix: after midnight yesterday's spot prices were used for up to 30 minutes.** Prices are
