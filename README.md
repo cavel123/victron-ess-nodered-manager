@@ -23,10 +23,11 @@ optional read-only mobile app.
   fees in the next 24 h, in summer the lowest sell price (PV refills the battery).
 - **Charging from the grid** – a *minimum SOC* guaranteed by a set time, a *target SOC* only
   when the price is below a cap (reduced by the PV forecast), and charging at negative prices.
-- **EV mode** – keeps the home battery from being discharged while an electric car is charging. When
+- **EV mode** – keeps the home battery from being discharged while an electric car is charging, so
+  the car charges straight from the grid. When
   the house consumption stays above a threshold (default 3 kW for 2 min) inside a time window (the
   low tariff schedule, or a custom from–to time, also across midnight), the flow raises the GX
-  *Minimum SOC* to the current SOC, so the battery is not discharged and the car runs from the grid.
+  *Minimum SOC* to the current SOC, so the battery is not discharged.
   Selling and grid charging of the battery are blocked meanwhile. When it ends (consumption below
   1.5 kW for 5 min, end of the window, switched off or Manual mode) the original Minimum SOC is
   restored exactly, also after a Node-RED restart. Detected from the house consumption; runs only in
@@ -144,10 +145,11 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
   v příštích 24 h, v létě s nejnižší prodejní cenou (baterii doplní FVE).
 - **Nabíjení ze sítě** – *nutné SOC* do nastaveného času, *cílové SOC* jen pod cenovým stropem
   (snížené podle předpovědi FVE), nabíjení při záporné ceně.
-- **EV režim** – brání tomu, aby nabíjení elektromobilu vybíjelo domácí baterii.
+- **EV režim** – brání tomu, aby nabíjení elektromobilu vybíjelo domácí baterii; auto se nabíjí
+  přímo ze sítě.
   Když odběr domu v časovém okně (nízký tarif podle rozvrhu, nebo vlastní čas od–do, i přes půlnoc)
   vydrží nad prahem (výchozí 3 kW po 2 min), flow zvedne v GX *Minimum SOC* na aktuální stav, takže se
-  baterie nevybíjí a auto bere ze sítě. Prodej i nabíjení baterie ze sítě se mezitím blokují. Po skončení
+  baterie nevybíjí. Prodej i nabíjení baterie ze sítě se mezitím blokují. Po skončení
   (odběr pod 1,5 kW po 5 min, konec okna, vypnutí nebo ruční režim) se vrátí přesně původní Minimum
   SOC, i po restartu Node-RED. Pozná se podle odběru domu; běží jen v automatu; vyžaduje režim ESS
   *Optimized (without BatteryLife)*.
