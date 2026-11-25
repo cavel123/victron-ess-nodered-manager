@@ -23,6 +23,14 @@ optional read-only mobile app.
   fees in the next 24 h, in summer the lowest sell price (PV refills the battery).
 - **Charging from the grid** – a *minimum SOC* guaranteed by a set time, a *target SOC* only
   when the price is below a cap (reduced by the PV forecast), and charging at negative prices.
+- **EV mode** – for a car charger on the AC input that would otherwise drain the home battery. When
+  the house consumption stays above a threshold (default 3 kW for 2 min) inside a time window (the
+  low tariff schedule, or a custom from–to time, also across midnight), the flow raises the GX
+  *Minimum SOC* to the current SOC, so the battery is not discharged and the car runs from the grid.
+  Selling and grid charging of the battery are blocked meanwhile. When it ends (consumption below
+  1.5 kW for 5 min, end of the window, switched off or Manual mode) the original Minimum SOC is
+  restored exactly, also after a Node-RED restart. Detected from the house consumption; runs only in
+  Auto mode; needs ESS mode *Optimized (without BatteryLife)*.
 - **Summer / winter profiles** – each season has its own settings; switching by date or manually.
 - **Spot prices** every 15 minutes – Czech market (spotovaelektrina.cz, fallback OTE + ČNB rate,
   CZK) or another European zone (Germany, Austria, Poland, Slovakia, Hungary, Netherlands, Belgium,
@@ -37,8 +45,9 @@ optional read-only mobile app.
   minimum run time per day counted from a set start time (e.g. a boiler 3 h in the cheapest hours).
 - **Statistics** – estimated earnings from selling and savings from PV self-consumption per day,
   week and month.
-- **Dashboard 2.0** – overview (battery, energy flow, today's energy, plan), settings with help
-  for every field, statistics, config backup / restore.
+- **Dashboard 2.0** – overview (battery, energy flow, today's energy, forecast and prices, one
+  sentence saying what is happening now and what comes next), settings with help for every field,
+  statistics, config backup / restore.
 - **Mobile app (PWA)** – read-only live view paired by a QR code.
 
 ## Screenshots
@@ -56,6 +65,10 @@ Demo installation (made-up data), English edition.
 **Tariffs and prices** (market zone, fees, spot price chart) and **Modes** (summer/winter profiles)
 
 <img src="screenshots/tariffs.png" alt="Tariffs and prices" width="440"> <img src="screenshots/modes.png" alt="Modes" width="440">
+
+**EV mode** (Modes page, here while it is holding the battery)
+
+<img src="screenshots/ev-mode.png" alt="EV mode settings and status" width="440">
 
 ## Requirements
 
@@ -131,6 +144,13 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
   v příštích 24 h, v létě s nejnižší prodejní cenou (baterii doplní FVE).
 - **Nabíjení ze sítě** – *nutné SOC* do nastaveného času, *cílové SOC* jen pod cenovým stropem
   (snížené podle předpovědi FVE), nabíjení při záporné ceně.
+- **EV režim** – pro nabíječku elektromobilu na AC vstupu, která by jinak vybíjela domácí baterii.
+  Když odběr domu v časovém okně (nízký tarif podle rozvrhu, nebo vlastní čas od–do, i přes půlnoc)
+  vydrží nad prahem (výchozí 3 kW po 2 min), flow zvedne v GX *Minimum SOC* na aktuální stav, takže se
+  baterie nevybíjí a auto bere ze sítě. Prodej i nabíjení baterie ze sítě se mezitím blokují. Po skončení
+  (odběr pod 1,5 kW po 5 min, konec okna, vypnutí nebo ruční režim) se vrátí přesně původní Minimum
+  SOC, i po restartu Node-RED. Pozná se podle odběru domu; běží jen v automatu; vyžaduje režim ESS
+  *Optimized (without BatteryLife)*.
 - **Letní a zimní profil** – každé období má vlastní nastavení; přepínání podle data nebo ručně.
 - **Spotové ceny** po 15 minutách – český trh (spotovaelektrina.cz, záloha OTE + kurz ČNB) nebo
   jiná evropská zóna v EUR z Energy-Charts; rozvrh distribučního tarifu VT/NT, poplatky.
@@ -141,7 +161,8 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
   a SOC*, nebo *automaticky podle ceny*: nejnižší cena spotu, nízký tarif, nebo pod zadanou cenou,
   s minimální dobou běhu za den od nastaveného času (např. bojler 3 h v nejlevnějších hodinách).
 - **Statistika** – odhad výdělku z prodeje a úspory z vlastní spotřeby FVE za den, týden a měsíc.
-- **Dashboard 2.0** – přehled, nastavení s nápovědou u každého pole, statistika, záloha
+- **Dashboard 2.0** – přehled (baterie, toky energie, dnešní energie, předpověď a ceny a jedna věta,
+  co se právě děje a co přijde dál), nastavení s nápovědou u každého pole, statistika, záloha
   a obnova konfigurace.
 - **Mobilní aplikace** – živý přehled jen pro čtení, párování QR kódem.
 
