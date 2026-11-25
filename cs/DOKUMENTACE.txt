@@ -1389,7 +1389,7 @@ meri a zobrazuje, jen se podle nej neomezuje pretok.
 
 ## 5c. EV rezim – baterie se nevybiji behem nabijeni elektromobilu
 
-Nabijecka elektromobilu na AC vstupu (pred merenim) se pro Victron tvari jako odber domu, takze ESS ji
+Nabijeni elektromobilu se pro Victron tvari jako odber domu, takze ESS ho
 zasobuje z baterie. EV rezim tomu zabrani pres GX **Minimum SOC** (`Settings/CGwacs/BatteryLife/
 MinimumSocLimit`): pod nim menic baterii nevybiji a dum jede ze site.
 

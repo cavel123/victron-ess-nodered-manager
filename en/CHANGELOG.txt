@@ -4,6 +4,11 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.080 – 2026-11-25
+
+- EV mode description: removed the mention of how the charger is wired (dashboard help and documentation).
+  No change in behaviour.
+
 ## 0.9.079 – 2026-11-24
 
 - **The Mode row (dashboard and mobile app) shows EV mode.** When EV mode is on, "EV mode on (low tariff)" or
@@ -29,8 +34,8 @@ is in Czech (cs/CHANGELOG.txt in the repository).
 
 ## 0.9.077 – 2026-11-24
 
-- **New: EV mode - the battery is not discharged while an electric car is charging.** A charger on the AC input
-  (before the meter) otherwise drained the home battery. The Modes page has an "EV mode" group: a switch, a
+- **New: EV mode - the battery is not discharged while an electric car is charging.** Charging an electric car
+  otherwise drained the home battery. The Modes page has an "EV mode" group: a switch, a
   window (low tariff from the schedule, or a custom from-to, also across midnight), the start threshold
   (default 3 kW for 2 min), the end threshold (1.5 kW for 5 min) and a margin (1 %). When EV mode is on, we
   are inside the window and the consumption of the whole house (Consumption) stays above the threshold, the

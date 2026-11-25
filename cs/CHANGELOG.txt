@@ -13,6 +13,11 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.080 – 2026-11-25
+
+- Popis EV rezimu: odstranena zminka o zapojeni nabijecky (napoveda v dashboardu a dokumentace). Funkce se
+  nemeni.
+
 ## 0.9.079 – 2026-11-24
 
 - **Radek Rezim (dashboard i mobilni aplikace) ukazuje EV rezim.** Pri zapnutem EV rezimu je za rezimem
@@ -37,8 +42,8 @@ Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 ## 0.9.077 – 2026-11-24
 
-- **Nove: EV rezim - baterie se nevybiji behem nabijeni elektromobilu.** Nabijecka na AC vstupu (pred merenim)
-  jinak vybijela domaci baterii. Na strance Rezimy je skupina "EV rezim": vypinac, okno (nizky tarif podle
+- **Nove: EV rezim - baterie se nevybiji behem nabijeni elektromobilu.** Nabijeni elektromobilu
+  jinak vybijelo domaci baterii. Na strance Rezimy je skupina "EV rezim": vypinac, okno (nizky tarif podle
   rozvrhu, nebo vlastni od-do, i pres pulnoc), prah startu (vychozi 3 kW po 2 min), prah konce (1,5 kW po
   5 min) a rezerva (1 %). Kdyz je EV rezim zapnuty, jsme v okne a odber celeho domu (Consumption) vydrzi nad
   prahem, flow **precte a ulozi puvodni GX Minimum SOC** (`BatteryLife/MinimumSocLimit`), nastavi

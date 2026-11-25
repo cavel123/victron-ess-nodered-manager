@@ -153,7 +153,7 @@ README / Changelog
 
 ## 5b. EV mode - the battery is not discharged while an electric car is charging
 
-A car charger on the AC input (before the meter) looks like house consumption to Victron, so ESS supplies it
+Charging an electric car looks like house consumption to Victron, so ESS supplies it
 from the battery. EV mode prevents that through the GX **Minimum SOC** (`Settings/CGwacs/BatteryLife/
 MinimumSocLimit`): below it the inverter does not discharge the battery and the house runs from the grid.
 
