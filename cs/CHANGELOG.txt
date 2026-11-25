@@ -13,6 +13,46 @@ zaznamem v tomhle souboru - na zapis sem se tedy neda zapomenout.
 Podrobne zduvodneni jednotlivych zmen (proc, ne jen co) je v `README.txt`.
 
 
+## 0.9.079 – 2026-11-24
+
+- **Radek Rezim (dashboard i mobilni aplikace) ukazuje EV rezim.** Pri zapnutem EV rezimu je za rezimem
+  dopsano "EV rezim zapnuty (podle NT)" nebo "(v case 22:00-06:00)"; kdyz EV rezim prave bezi a drzi baterii,
+  "EV rezim AKTIVNI (baterie drzena na 64 %)". V Manualu se nepise (EV rezim bezi jen v Auto). Mobilni
+  aplikace (verze v16) dostava udaj `ev` z flow; se starsim flow radek zustane beze zmeny. "EV rezim AKTIVNI"
+  je na dashboardu cervene a tucne, v aplikaci oranzove a tucne (cervena v aplikaci znamena problem).
+- EV rezim: pole "Vlastni okno od" a "do" jsou vedle sebe (spolecna napoveda pod nimi).
+- Radek Rezim na dashboardu ukazuje i sezonu jako mobilni aplikace: "Automat · zima" / "Automat · leto".
+
+## 0.9.078 – 2026-11-24
+
+- **EV rezim: pole "Vlastni okno od / do" se skryvaji, kdyz je zvoleno "Nizky tarif (NT)".** Zustavala viditelna
+  s predvyplnenym 22:00-06:00, ktere se pri nizkem tarifu nepouziva, a davala dojem, ze okno plati. Zobrazi se
+  jen pri volbe "Vlastni cas". Stavovy text rika, jaka podminka okna neplati ("mimo casove okno (mimo nizky
+  tarif)" nebo "(22:00-06:00)").
+- **EV rezim: zrusena "rezerva" (o kolik % pod aktualni SOC).** Minimum SOC se pri zapnuti EV rezimu vzdy
+  nastavi na aktualni SOC (dolu na cele %, aby nebylo nad skutecnym SOC - to by baterii hned dobijelo ze
+  site); pod puvodni hodnotu z GX se nikdy nejde. Pole z dashboardu zmizelo.
+- **EV rezim: "Spustit pri odberu od (kW)" a "po dobu aspon (min)" jsou vedle sebe, stejne jako dvojice pro
+  ukonceni.**
+
+## 0.9.077 – 2026-11-24
+
+- **Nove: EV rezim - baterie se nevybiji behem nabijeni elektromobilu.** Nabijecka na AC vstupu (pred merenim)
+  jinak vybijela domaci baterii. Na strance Rezimy je skupina "EV rezim": vypinac, okno (nizky tarif podle
+  rozvrhu, nebo vlastni od-do, i pres pulnoc), prah startu (vychozi 3 kW po 2 min), prah konce (1,5 kW po
+  5 min) a rezerva (1 %). Kdyz je EV rezim zapnuty, jsme v okne a odber celeho domu (Consumption) vydrzi nad
+  prahem, flow **precte a ulozi puvodni GX Minimum SOC** (`BatteryLife/MinimumSocLimit`), nastavi
+  `max(puvodni, SOC - rezerva)` - pod puvodni hodnotu nikdy - a **na konci vrati presne puvodni hodnotu**
+  (i kdyby ji mezitim nekdo v GX zmenil). Navrat se overuje zpetnym ctenim z GX a opakuje se.
+- Behem EV rezimu `ex_decide` blokuje **vsechen prodej (i prebytku FVE) a nabijeni baterie ze site**, EV ma
+  prednost. Po konci EV se plan nabijeni sam prepocita (kazdych 5 minut z aktualniho SOC), takze se domaci
+  baterie doplni v zbylych oknech do terminu.
+- EV rezim bezi jen v rezimu Auto. Stav se uklada do souboru (`ev-state.json`), takze po restartu Node-RED se
+  puvodni Minimum SOC vrati i kdyz restart nastal uprostred nabijeni. Veta na Prehledu rika "EV rezim: ...".
+- **Predpoklad overeny uzivatelem:** pod GX Minimum SOC by se baterie okamzite dobijela ze site, SOC je tedy
+  vzdy aspon na minimu. Rezim "Optimized without BatteryLife" je podminka (v "Keep batteries charged"
+  Minimum SOC nic nedela).
+
 ## 0.9.076 – 2026-11-24
 
 - **Oprava: na telefonu se v dashboardu lamala slova uprostred ("tomorro-w") v druhem radku tabulky Energie

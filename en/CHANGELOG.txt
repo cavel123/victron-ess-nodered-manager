@@ -4,6 +4,50 @@ Newest entry first. The English edition starts at 0.9.054; the full history of e
 is in Czech (cs/CHANGELOG.txt in the repository).
 
 
+## 0.9.079 – 2026-11-24
+
+- **The Mode row (dashboard and mobile app) shows EV mode.** When EV mode is on, "EV mode on (low tariff)" or
+  "(at 22:00-06:00)" is added after the mode; while EV mode is running and holding the battery, "EV mode
+  ACTIVE (battery held at 64 %)". It is not written in Manual (EV mode runs only in Auto). The mobile app
+  (version v16) receives the `ev` data from the flow; with an older flow the row stays unchanged. "EV mode
+  ACTIVE" is red and bold on the dashboard, orange and bold in the app (red in the app means a problem).
+- EV mode: the "Custom window from" and "to" fields are side by side (shared help below them).
+- The Mode row on the dashboard also shows the season, like the mobile app: "Automatic · winter" / "Automatic · summer".
+
+## 0.9.078 – 2026-11-24
+
+- **EV mode: the "Custom window from / to" fields are hidden when "Low tariff (LT)" is selected.** They stayed
+  visible with the pre-filled 22:00-06:00, which is not used with the low tariff and made it look as if that
+  window applied. They appear only with "Custom time". The status text says which window condition is not met
+  ("outside the time window (outside the low tariff)" or "(22:00-06:00)").
+- **EV mode: the "margin" (how many % below the current SOC) was removed.** When EV mode starts, the Minimum SOC
+  is always set to the current SOC (rounded down to whole %, so that it is not above the real SOC - that
+  would charge the battery from the grid at once); it never goes below the original GX value. The dashboard
+  field is gone.
+- **EV mode: "Start at consumption from (kW)" and "for at least (min)" are side by side, as is the pair for
+  ending.**
+
+## 0.9.077 – 2026-11-24
+
+- **New: EV mode - the battery is not discharged while an electric car is charging.** A charger on the AC input
+  (before the meter) otherwise drained the home battery. The Modes page has an "EV mode" group: a switch, a
+  window (low tariff from the schedule, or a custom from-to, also across midnight), the start threshold
+  (default 3 kW for 2 min), the end threshold (1.5 kW for 5 min) and a margin (1 %). When EV mode is on, we
+  are inside the window and the consumption of the whole house (Consumption) stays above the threshold, the
+  flow **reads and stores the original GX Minimum SOC** (`BatteryLife/MinimumSocLimit`), sets
+  `max(original, SOC - margin)` - never below the original value - and **restores the exact original value at
+  the end** (even if someone changed it in GX in the meantime). The restore is verified by reading it back
+  from GX and repeated.
+- During EV mode `ex_decide` blocks **all selling (including PV surplus) and grid charging of the battery**, the
+  EV has priority. After the EV is done the charging plan recalculates itself (every 5 minutes from the
+  current SOC), so the home battery is topped up in the remaining windows before the deadline.
+- EV mode runs only in Auto mode. Its state is stored in a file (`ev-state.json`), so after a Node-RED restart
+  the original Minimum SOC is restored even if the restart happened in the middle of charging. The Overview
+  sentence says "EV mode: ...".
+- **Assumption confirmed by the user:** below the GX Minimum SOC the battery would immediately be charged from
+  the grid, so SOC is always at least at the minimum. The "Optimized without BatteryLife" mode is a
+  prerequisite (in "Keep batteries charged" the Minimum SOC has no effect).
+
 ## 0.9.076 – 2026-11-24
 
 - **Fix: on a phone the dashboard broke words in the middle ("tomorro-w") in the second row of the Energy

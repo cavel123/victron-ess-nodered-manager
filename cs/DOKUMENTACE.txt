@@ -1387,6 +1387,35 @@ Ochranu lze vypnout z dashboardu (`voltageProtectionEnabled`). Pri vypnute ochra
 meri a zobrazuje, jen se podle nej neomezuje pretok.
 
 
+## 5c. EV rezim – baterie se nevybiji behem nabijeni elektromobilu
+
+Nabijecka elektromobilu na AC vstupu (pred merenim) se pro Victron tvari jako odber domu, takze ESS ji
+zasobuje z baterie. EV rezim tomu zabrani pres GX **Minimum SOC** (`Settings/CGwacs/BatteryLife/
+MinimumSocLimit`): pod nim menic baterii nevybiji a dum jede ze site.
+
+**Podminky:** v GX rezim ESS "Optimized (without BatteryLife)" (v "Keep batteries charged" Minimum SOC nic
+nedela). Pod Minimum SOC by se baterie okamzite dobijela ze site, SOC je tedy vzdy aspon na minimu.
+
+**Spusteni** (vsechno najednou): EV rezim zapnuty, rezim Auto, jsme v casovem okne (nizky tarif podle rozvrhu,
+nebo vlastni od-do, i pres pulnoc) a odber celeho domu (Consumption) je nad prahem (vychozi 3 kW) aspon
+zadanou dobu (2 min). Ruzne prahy a casy pro start a konec (1,5 kW / 5 min) brani kmitani.
+
+**Co se stane:** flow precte aktualni GX Minimum SOC a ulozi ho (soubor `ev-state.json`), zapise
+`max(puvodni, aktualni SOC)` (dolu na cele %, pod puvodni hodnotu nikdy), a behem rezimu `ex_decide`
+blokuje **vsechen prodej (i prebytku FVE) i nabijeni baterie ze site** - EV ma prednost. Plan nabijeni se
+kazdych 5 minut prepocita z aktualniho SOC, takze se domaci baterie po EV doplni v zbylych oknech do terminu
+(kdyz by se to nestihlo, ukaze to stavajici cervena veta "nestihne se").
+
+**Konec** (dalsi podminka, co nastane driv): odber pod prahem konce po zadanou dobu, konec okna, vypnuti
+funkce, prepnuti do Manualu. Flow zapise **presne puvodni hodnotu** (i kdyby ji mezitim nekdo v GX zmenil)
+a navrat overuje zpetnym ctenim z GX; nepotvrzeny zapis se po 30 s opakuje. Rozpracovany stav je v souboru,
+takze po restartu Node-RED se puvodni Minimum SOC vrati i kdyz restart nastal uprostred nabijeni.
+
+**Omezeni:** kdyz Node-RED v EV rezimu spadne a nerozbehne se, zustane Minimum SOC zvednute (baterie se
+nevybiji, dum jede ze site), dokud se Node-RED nerozbehne. Odber se bere z Consumption; pri vyssim zakladnim
+odberu domu (varna deska, sauna) v okne doporucuji prah zvysit. Pozdeji lze misto odberu pouzit primo
+mereni nabijecky (MQTT).
+
 ## 5b. Heartbeat – hlaseni na monitorovaci server
 
 ### Proc

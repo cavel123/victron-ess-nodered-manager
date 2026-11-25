@@ -151,6 +151,39 @@ README / Changelog
   calibration-topup, pv-surplus-only.
 
 
+## 5b. EV mode - the battery is not discharged while an electric car is charging
+
+A car charger on the AC input (before the meter) looks like house consumption to Victron, so ESS supplies it
+from the battery. EV mode prevents that through the GX **Minimum SOC** (`Settings/CGwacs/BatteryLife/
+MinimumSocLimit`): below it the inverter does not discharge the battery and the house runs from the grid.
+
+**Prerequisites:** the GX ESS mode is "Optimized (without BatteryLife)" (in "Keep batteries charged" the
+Minimum SOC has no effect). Below the Minimum SOC the battery would immediately be charged from the grid,
+so SOC is always at least at the minimum.
+
+**Start** (all at once): EV mode on, Auto mode, inside the time window (low tariff from the schedule, or a
+custom from-to, also across midnight) and the consumption of the whole house (Consumption) above the
+threshold (default 3 kW) for the set time (2 min). Different thresholds and times for start and end
+(1.5 kW / 5 min) prevent flapping.
+
+**What happens:** the flow reads the current GX Minimum SOC and stores it (file `ev-state.json`), writes
+`max(original, current SOC)` (rounded down to whole %, never below the original), and during the mode
+`ex_decide` blocks **all selling (including PV surplus) and grid charging of the battery** - the EV has
+priority. The charging plan recalculates every 5 minutes from the current SOC, so the home battery is topped
+up after the EV in the remaining windows before the deadline (if that is not possible, the existing red
+"will not make it" sentence says so).
+
+**End** (whichever comes first): consumption below the end threshold for the set time, end of the window,
+the function switched off, switch to Manual. The flow writes the **exact original value** (even if someone
+changed it in GX meanwhile) and verifies it by reading it back from GX; an unconfirmed write is repeated
+after 30 s. The state in progress is stored in a file, so after a Node-RED restart the original Minimum SOC
+is restored even if the restart happened in the middle of charging.
+
+**Limitations:** if Node-RED crashes in EV mode and does not come back, the Minimum SOC stays raised (the
+battery is not discharged, the house runs from the grid) until Node-RED runs again. Consumption is taken from
+Consumption; with a high base load of the house (hob, sauna) in the window raise the threshold. Later the
+charger's own measurement (MQTT) can be used instead.
+
 ## 6. Battery SOC calibration
 
 The BMS needs to reach 100 % now and then to correct its SOC estimate.
