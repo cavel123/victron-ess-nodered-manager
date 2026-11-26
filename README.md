@@ -49,7 +49,8 @@ optional read-only mobile app.
 - **Dashboard 2.0** – overview (battery, energy flow, today's energy, forecast and prices, one
   sentence saying what is happening now and what comes next), settings with help for every field,
   statistics, config backup / restore.
-- **Mobile app (PWA)** – read-only live view paired by a QR code.
+- **Mobile app (PWA)** – read-only live view paired by a QR code, with a chart of today's and
+  tomorrow's spot prices (Czech market, exchange price without fees and VAT; shown with CZK prices).
 
 ## Screenshots
 
@@ -166,7 +167,8 @@ v dashboardu, k dispozici je i mobilní aplikace jen pro čtení.
 - **Dashboard 2.0** – přehled (baterie, toky energie, dnešní energie, předpověď a ceny a jedna věta,
   co se právě děje a co přijde dál), nastavení s nápovědou u každého pole, statistika, záloha
   a obnova konfigurace.
-- **Mobilní aplikace** – živý přehled jen pro čtení, párování QR kódem.
+- **Mobilní aplikace** – živý přehled jen pro čtení, párování QR kódem, s grafem spotových cen na
+  dnešek a zítřek (český trh, burzovní cena bez poplatků a DPH; u instalací v korunách).
 
 ### Ukázky obrazovek
 
